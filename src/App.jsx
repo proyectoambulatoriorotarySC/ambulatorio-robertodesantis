@@ -1,51 +1,51 @@
 // src/App.jsx
-import { useEffect, useState } from "react";
-import { especialidadesService } from "./services/especialidadesService";
-import { configuracionService } from "./services/configuracionService";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { useAuth } from "./hooks/useAuth";
+
+// Importación de las páginas (cuando las crees en tu carpeta pages)
+// import Home from "./pages/Home";
+// import Login from "./pages/Login";
+// import AdminDashboard from "./pages/AdminDashboard";
 
 function App() {
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-
-  useEffect(() => {
-    const probarServicios = async () => {
-      try {
-        console.log("🚀 Iniciando pruebas de la capa de servicios...");
-
-        // 1. Probar Servicio de Configuración
-        console.log("⏳ Solicitando configuración global...");
-        const configGlobal = await configuracionService.getGlobal();
-        console.log("✅ Configuración global recibida de Firebase:", configGlobal);
-
-        // 2. Probar Servicio de Especialidades
-        console.log("⏳ Solicitando lista de especialidades...");
-        const listaEspecialidades = await especialidadesService.getAll();
-        console.log("✅ Especialidades recibidas de Firebase:", listaEspecialidades);
-
-        setLoading(false);
-      } catch (err) {
-        console.error("❌ Error detectado en la prueba:", err);
-        setError(err.message);
-        setLoading(false);
-      }
-    };
-
-    probarServicios();
-  }, []);
+  const { user } = useAuth(); // Estado global de la sesión
 
   return (
-    <div style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>🧪 Consola de Pruebas de Servicios</h1>
-      <p>Abre la consola del navegador presionando <b>F12</b> o clic derecho - Inspeccionar.</p>
-      
-      {loading && <p style={{ color: "orange" }}>⏳ Consultando a Firebase...</p>}
-      
-      {error ? (
-        <p style={{ color: "red", fontWeight: "bold" }}>❌ Error: {error}</p>
-      ) : (
-        !loading && <p style={{ color: "green", fontWeight: "bold" }}>🎉 ¡Prueba completada con éxito! Revisa la consola.</p>
-      )}
-    </div>
+    <BrowserRouter>
+      <div className="app-container" style={{ fontFamily: "sans-serif" }}>
+        
+        {/* Aquí puedes colocar un componente fijo como el <Navbar /> */}
+        <header style={{ padding: "15px", background: "#f8f9fa", borderBottom: "1px solid #dee2e6" }}>
+          <div style={{ maxWidth: "1200px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <h1 style={{ margin: 0, fontSize: "1.5rem" }}>Ambulatorio Roberto de Santis</h1>
+            {user && <span style={{ color: "green", fontSize: "0.9rem" }}>● Admin: {user.email}</span>}
+          </div>
+        </header>
+
+        {/* El enrutador que decide qué página mostrar según la URL */}
+        <main style={{ minHeight: "70vh", maxWidth: "1200px", margin: "0 auto", padding: "20px" }}>
+          <Routes>
+            {/* Ruta Pública para los Pacientes */}
+            <Route path="/" element={<div>[Página Home - Buscador de Médicos]</div>} />
+            
+            {/* Ruta de Acceso para el Personal */}
+            <Route path="/login" element={<div>[Página Login - Formulario de Acceso]</div>} />
+            
+            {/* Ruta del Panel Administrativo */}
+            <Route path="/admin" element={<div>[Página Admin - Gestión de Horarios]</div>} />
+            
+            {/* Ruta de escape por si escriben cualquier cosa loca en la URL (Error 404) */}
+            <Route path="*" element={<h2>❌ Error 404: Página no encontrada</h2>} />
+          </Routes>
+        </main>
+
+        {/* Componente fijo de pie de página */}
+        <footer style={{ padding: "15px", background: "#212529", color: "white", textAlign: "center", fontSize: "0.9rem" }}>
+          <p style={{ margin: 0 }}>&copy; {new Date().getFullYear()} Ambulatorio Roberto de Santis - Servicio Comunitario</p>
+        </footer>
+
+      </div>
+    </BrowserRouter>
   );
 }
 
