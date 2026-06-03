@@ -1,6 +1,11 @@
 import { consultationPackages } from "../data/siteContent";
+import { mockConfiguracionGlobal } from "../data/mockData";
 
-const ConsultasIntegrales = () => {
+const ConsultasIntegrales = ({ configuracion }) => {
+  const packages = configuracion?.consultasIntegrales?.length
+    ? configuracion.consultasIntegrales
+    : mockConfiguracionGlobal.consultasIntegrales || consultationPackages;
+
   return (
     <section className="content-section content-section--soft" id="servicios">
       <div className="section-heading">
@@ -12,7 +17,7 @@ const ConsultasIntegrales = () => {
       </div>
 
       <div className="feature-grid">
-        {consultationPackages.map((item) => (
+        {packages.map((item) => (
           <article key={item.title} className="feature-card">
             <strong>{item.title}</strong>
             <p>{item.detail}</p>

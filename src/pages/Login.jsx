@@ -31,7 +31,15 @@ const Login = () => {
       await authService.login(email, password);
       navigate(redirectTo, { replace: true });
     } catch (loginError) {
-      setError("No se pudo iniciar sesión. Verifica tus credenciales.");
+      const code = loginError?.code;
+
+      if (code === "auth/invalid-credential" || code === "auth/wrong-password" || code === "auth/user-not-found") {
+        setError("Correo o contraseña incorrectos.");
+      } else if (code === "auth/invalid-email") {
+        setError("El correo no tiene un formato válido.");
+      } else {
+        setError("No se pudo iniciar sesión. Verifica tus credenciales.");
+      }
       console.error(loginError);
     } finally {
       setIsSubmitting(false);

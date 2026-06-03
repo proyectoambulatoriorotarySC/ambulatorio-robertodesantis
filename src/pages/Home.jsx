@@ -141,7 +141,7 @@ const Home = () => {
           <HorarioEspecialidad especialidad={selectedSpecialty} />
         </section>
 
-        <ConsultasIntegrales />
+        <ConsultasIntegrales configuracion={config} />
         <ServiciosApoyo />
         <MisionVision configuracion={config} />
         <MapaUbicacion configuracion={config} />

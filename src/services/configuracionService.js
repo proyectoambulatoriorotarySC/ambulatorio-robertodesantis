@@ -1,9 +1,21 @@
 // src/services/configuracionService.js
-import { db } from "./firebase";
-import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
+import { auth, db } from "./firebase";
+import { addDoc, collection, doc, getDoc, onSnapshot, serverTimestamp, updateDoc } from "firebase/firestore";
 
 // Apuntamos directamente al documento único 'global' dentro de la colección 'configuracion'
 const docRef = doc(db, "configuracion", "global");
+const auditoriaRef = collection(db, "auditoria");
+
+const registrarAuditoria = async (accion, detalle) => {
+  await addDoc(auditoriaRef, {
+    accion,
+    entidad: "configuracion",
+    entidadId: "global",
+    detalle,
+    usuario: auth.currentUser?.email || "sistema",
+    fechaHora: serverTimestamp(),
+  });
+};
 
 export const configuracionService = {
   // GET - Obtener la configuración global (Para pintar el Banner, el Footer y los Servicios Adicionales)
@@ -20,6 +32,7 @@ export const configuracionService = {
           telefonoContacto: "",
           horarioGeneral: "",
           direccionFisica: "",
+          consultasIntegrales: [],
           serviciosAdicionales: []
         };
       }
@@ -45,6 +58,7 @@ export const configuracionService = {
           telefonoContacto: "",
           horarioGeneral: "",
           direccionFisica: "",
+          consultasIntegrales: [],
           serviciosAdicionales: []
         });
       },
@@ -62,6 +76,7 @@ export const configuracionService = {
     try {
       // updateDoc solo modifica los campos que le envíes, respetando los demás
       await updateDoc(docRef, nuevosDatos);
+      await registrarAuditoria("ACTUALIZAR", "Se actualizó la configuración global");
       return nuevosDatos;
     } catch (error) {
       console.error("Error al actualizar la configuración global:", error);

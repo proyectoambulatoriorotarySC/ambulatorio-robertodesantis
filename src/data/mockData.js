@@ -11,6 +11,24 @@ export const mockConfiguracionGlobal = {
   telefonoContacto: "0414-191-5455",
   horarioGeneral: "De lunes a viernes (7:30am-3:00pm)",
   direccionFisica: "Av. Norte Sur 4 Parcela 296-14-01 Ventuari. Cerca de la intersección con la Av. Atlántico.",
+  consultasIntegrales: [
+    {
+      title: "Cardiología + EKG",
+      detail: "Consulta integral con electrocardiograma en una sola visita.",
+    },
+    {
+      title: "Ginecología + Eco",
+      detail: "Eco pélvico o transvaginal según la indicación médica.",
+    },
+    {
+      title: "Urología + Eco",
+      detail: "Evaluación urológica con eco prostático o testicular.",
+    },
+    {
+      title: "Cirugía + Eco abdominal",
+      detail: "Valoración quirúrgica con apoyo diagnóstico inmediato.",
+    },
+  ],
   serviciosAdicionales: [
     "Eco de tiroides",
     "Eco de piel y partes blandas",

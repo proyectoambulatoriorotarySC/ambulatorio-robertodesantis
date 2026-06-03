@@ -4,7 +4,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
-import ProtectedRoute from "./components/ProtectedRoute";
+import PrivateRoute from "./components/PrivateRoute";
 import { useAuth } from "./hooks/useAuth";
 
 function App() {
@@ -15,7 +15,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={user ? <Navigate to="/admin" replace /> : <Login />} />
-        <Route element={<ProtectedRoute />}>
+        <Route element={<PrivateRoute />}>
           <Route path="/admin" element={<AdminDashboard />} />
         </Route>
         <Route path="*" element={<NotFound />} />

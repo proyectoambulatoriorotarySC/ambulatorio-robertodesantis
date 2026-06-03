@@ -58,9 +58,9 @@ export const useEspecialidades = () => {
   // 3. UPDATE - Modificar médicos, horarios o estudios de una especialidad
   const updateEspecialidad = async (id, especialidadData) => {
     try {
-      await especialidadesService.update(id, especialidadData);
+      const especialidadActualizada = await especialidadesService.update(id, especialidadData);
       setEspecialidades((prev) =>
-        prev.map((esp) => (esp.id === id ? { ...esp, ...especialidadData } : esp))
+        prev.map((esp) => (esp.id === id ? { ...esp, ...especialidadActualizada } : esp))
       );
     } catch (err) {
       console.error(err);
