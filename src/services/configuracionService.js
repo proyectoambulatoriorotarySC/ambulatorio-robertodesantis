@@ -1,6 +1,6 @@
 // src/services/configuracionService.js
 import { db } from "./firebase";
-import { doc, getDoc, updateDoc } from "firebase/firestore";
+import { doc, getDoc, onSnapshot, updateDoc } from "firebase/firestore";
 
 // Apuntamos directamente al documento único 'global' dentro de la colección 'configuracion'
 const docRef = doc(db, "configuracion", "global");
@@ -27,6 +27,34 @@ export const configuracionService = {
       console.error("Error al obtener la configuración global de Firestore:", error);
       throw error;
     }
+  },
+
+  // SUBSCRIBE - Escucha en tiempo real los cambios del documento global
+  subscribeGlobal: (callback, onError) => {
+    return onSnapshot(
+      docRef,
+      (docSnap) => {
+        if (docSnap.exists()) {
+          callback(docSnap.data());
+          return;
+        }
+
+        callback({
+          avisoActivo: false,
+          textoAviso: "",
+          telefonoContacto: "",
+          horarioGeneral: "",
+          direccionFisica: "",
+          serviciosAdicionales: []
+        });
+      },
+      (error) => {
+        console.error("Error al escuchar la configuración global de Firestore:", error);
+        if (onError) {
+          onError(error);
+        }
+      }
+    );
   },
 
   // UPDATE - Modificar los datos desde el panel /admin (Activar/desactivar avisos, cambiar teléfonos, etc.)

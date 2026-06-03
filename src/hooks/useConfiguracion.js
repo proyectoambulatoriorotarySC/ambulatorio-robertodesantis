@@ -12,34 +12,48 @@ export const useConfiguracion = () => {
 
   // 1. READ - Obtener la configuración global de forma segura
   useEffect(() => {
-    let isMounted = true; 
+    let isMounted = true;
+    let unsubscribe = null;
 
-    const cargarConfiguracion = async () => {
+    const startSubscription = async () => {
       try {
         if (isMounted) {
           setIsLoading(true);
           setError(null);
         }
-        const data = await configuracionService.getGlobal();
-        if (isMounted) {
-          setConfiguracion(data);
-        }
+
+        unsubscribe = configuracionService.subscribeGlobal(
+          (data) => {
+            if (!isMounted) {
+              return;
+            }
+
+            setConfiguracion(data);
+            setIsLoading(false);
+          },
+          () => {
+            if (isMounted) {
+              setError("Error al cargar la configuración global del ambulatorio.");
+              setIsLoading(false);
+            }
+          }
+        );
       } catch (err) {
         console.error(err);
         if (isMounted) {
           setError("Error al cargar la configuración global del ambulatorio.");
-        }
-      } finally {
-        if (isMounted) {
           setIsLoading(false);
         }
       }
     };
 
-    cargarConfiguracion();
+    startSubscription();
 
     return () => {
       isMounted = false; 
+      if (unsubscribe) {
+        unsubscribe();
+      }
     };
   }, [reloadTrigger]);
 
