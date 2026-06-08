@@ -137,14 +137,10 @@ iframe {
 .brand__mark {
 	width: 54px;
 	height: 54px;
-	border-radius: 18px;
-	display: grid;
-	place-items: center;
-	background: linear-gradient(145deg, #ffffff 0%, #eaf4ff 100%);
-	color: var(--primary-dark);
-	font-weight: 900;
+	border-radius: 50%;
+	object-fit: cover;
 	box-shadow: var(--shadow);
-	border: 1px solid rgba(15, 134, 255, 0.12);
+	border: 2px solid rgba(255, 255, 255, 0.6);
 }
 
 .brand__copy {

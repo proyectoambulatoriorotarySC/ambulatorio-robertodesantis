@@ -16,7 +16,7 @@ const Header = () => {
     <header className="site-header">
       <div className="site-header__inner">
         <Link className="brand" to="/">
-          <span className="brand__mark" aria-hidden="true">AR</span>
+          <img className="brand__mark" src="/logoRotary.png" alt="Logo Rotary Club" />
           <span className="brand__copy">
             <strong>Ambulatorio Roberto De Santis</strong>
             <span>Rotary Club</span>
