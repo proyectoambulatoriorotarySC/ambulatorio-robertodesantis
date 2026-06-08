@@ -138,12 +138,7 @@ iframe {
 	width: 90px;
 	height: 90px;
 	object-fit: contain;
-	box-shadow: var(--shadow);
-	border: 2px solid rgba(255, 255, 255, 0.6);
 	flex-shrink: 0;
-	border-radius: 12px;
-	background: #fff;
-	padding: 4px;
 }
 
 .brand__copy {
