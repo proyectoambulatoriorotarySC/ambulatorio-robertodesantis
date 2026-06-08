@@ -24,10 +24,8 @@ const Footer = () => {
 
         <div>
           <p className="site-footer__title">Accesos</p>
-          <Link to="/login" className="site-footer__link">
-            Acceso administrativo
-          </Link>
-          <a href="/#especialidades" className="site-footer__link">Especialidades</a>
+          <Link to="/especialidades" className="site-footer__link">Especialidades</Link>
+          <Link to="/nosotros" className="site-footer__link">Ubicación</Link>
         </div>
       </div>
 

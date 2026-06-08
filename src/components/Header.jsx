@@ -1,22 +1,16 @@
 import { NavLink, Link } from "react-router-dom";
 import { useState } from "react";
-import { useAuth } from "../hooks/useAuth";
-import { authService } from "../services/authService";
 
 const navigationItems = [
-  { label: "Especialidades", href: "/#especialidades" },
-  { label: "Directorio Médico", href: "/#directorio" },
-  { label: "Servicios", href: "/#servicios" },
-  { label: "Nosotros", href: "/#nosotros" },
+  { label: "Inicio", to: "/" },
+  { label: "Especialidades", to: "/especialidades" },
+  { label: "Directorio Médico", to: "/directorio" },
+  { label: "Servicios", to: "/servicios" },
+  { label: "Nosotros", to: "/nosotros" },
 ];
 
 const Header = () => {
-  const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
-
-  const handleLogout = async () => {
-    await authService.logout();
-  };
 
   return (
     <header className="site-header">
@@ -43,25 +37,10 @@ const Header = () => {
 
         <nav className={`site-nav ${menuOpen ? "site-nav--open" : ""}`}>
           {navigationItems.map((item) => (
-            <a key={item.label} href={item.href} onClick={() => setMenuOpen(false)}>
+            <NavLink key={item.label} to={item.to} onClick={() => setMenuOpen(false)} end={item.to === "/"}>
               {item.label}
-            </a>
-          ))}
-
-          {user ? (
-            <>
-              <NavLink to="/admin" className="site-nav__action" onClick={() => setMenuOpen(false)}>
-                Panel
-              </NavLink>
-              <button type="button" className="site-nav__logout" onClick={handleLogout}>
-                Salir
-              </button>
-            </>
-          ) : (
-            <NavLink to="/login" className="site-nav__action" onClick={() => setMenuOpen(false)}>
-              Acceso
             </NavLink>
-          )}
+          ))}
         </nav>
       </div>
     </header>

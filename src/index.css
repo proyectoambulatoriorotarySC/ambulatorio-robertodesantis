@@ -172,6 +172,7 @@ iframe {
 .site-nav a {
 	color: var(--ink);
 	opacity: 0.8;
+	transition: opacity 160ms ease, color 160ms ease;
 }
 
 .site-nav a:hover,
@@ -836,6 +837,18 @@ iframe {
 	text-align: center;
 }
 
+/* ───────── Tablet landscape / small desktop ───────── */
+@media (max-width: 1024px) {
+	.specialty-grid {
+		grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+	}
+
+	.schedule-grid {
+		grid-template-columns: repeat(auto-fit, minmax(115px, 1fr));
+	}
+}
+
+/* ───────── Tablet portrait ───────── */
 @media (max-width: 980px) {
 	.site-nav {
 		position: absolute;
@@ -853,6 +866,8 @@ iframe {
 		opacity: 0;
 		pointer-events: none;
 		transform: translateY(-8px);
+		transition: opacity 200ms ease, transform 200ms ease;
+		z-index: 70;
 	}
 
 	.site-nav--open {
@@ -883,10 +898,12 @@ iframe {
 	.hero-section__card {
 		justify-self: start;
 		margin: 0 1.6rem 1.6rem;
+		width: min(calc(100% - 3.2rem), 360px);
 	}
 
 	.site-footer__inner {
 		grid-template-columns: 1fr;
+		gap: 2rem;
 	}
 
 	.site-footer__bottom,
@@ -895,17 +912,99 @@ iframe {
 		flex-direction: column;
 		align-items: flex-start;
 	}
+
+	.nav-link--btn {
+		display: none;
+	}
 }
 
-@media (max-width: 640px) {
+/* ───────── Large phones / small tablets ───────── */
+@media (max-width: 768px) {
 	.site-header__inner {
 		min-height: 82px;
 	}
 
 	.brand__mark {
-		width: 46px;
-		height: 46px;
+		width: 48px;
+		height: 48px;
 		border-radius: 14px;
+		font-size: 0.95rem;
+	}
+
+	.brand__copy strong {
+		font-size: 0.95rem;
+	}
+
+	.brand__copy span {
+		font-size: 0.8rem;
+	}
+
+	.hero-section__content {
+		padding: 2.5rem 1.4rem 2rem;
+	}
+
+	.content-section,
+	.contact-section,
+	.auth-page,
+	.admin-page {
+		padding-left: 1rem;
+		padding-right: 1rem;
+	}
+
+	.content-section--search {
+		padding-top: 2rem;
+	}
+
+	.specialty-grid {
+		grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
+		gap: 0.7rem;
+	}
+
+	.specialty-card {
+		min-height: 180px;
+		padding: 1rem 0.8rem 0.9rem;
+	}
+
+	.specialty-card__icon {
+		width: 52px;
+		height: 52px;
+		font-size: 1.45rem;
+	}
+
+	.schedule-panel {
+		padding: 1.2rem;
+	}
+
+	.schedule-grid {
+		grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+	}
+
+	.feature-grid,
+	.support-grid,
+	.mission-grid {
+		grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+	}
+}
+
+/* ───────── Mobile ───────── */
+@media (max-width: 640px) {
+	.site-header__inner {
+		min-height: 72px;
+	}
+
+	.brand__mark {
+		width: 42px;
+		height: 42px;
+		border-radius: 12px;
+		font-size: 0.85rem;
+	}
+
+	.brand__copy strong {
+		font-size: 0.88rem;
+	}
+
+	.brand__copy span {
+		font-size: 0.75rem;
 	}
 
 	.hero-section::before,
@@ -913,16 +1012,52 @@ iframe {
 		border-radius: 24px;
 	}
 
+	.hero-section__content {
+		padding: 2rem 1.2rem 1.8rem;
+	}
+
+	.hero-section h1 {
+		font-size: clamp(2rem, 10vw, 2.8rem);
+	}
+
+	.hero-section p {
+		font-size: 1rem;
+	}
+
+	.hero-section__actions {
+		flex-direction: column;
+	}
+
+	.hero-section__actions .button {
+		width: 100%;
+		justify-content: center;
+	}
+
+	.hero-section__card {
+		margin: 0 1.2rem 1.2rem;
+		padding: 1.2rem;
+		width: calc(100% - 2.4rem);
+	}
+
 	.content-section,
 	.contact-section,
 	.auth-page,
 	.admin-page {
+		padding-top: 2.5rem;
+		padding-bottom: 2.5rem;
 		padding-left: 0;
 		padding-right: 0;
 	}
 
 	.specialty-card {
-		min-height: 176px;
+		min-height: 164px;
+	}
+
+	.specialty-summary {
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.25rem;
+		font-size: 0.85rem;
 	}
 
 	.search-panel__field {
@@ -933,14 +1068,113 @@ iframe {
 
 	.search-panel__field input {
 		padding: 0.25rem 0.75rem 0;
+		width: 100%;
 	}
 
 	.search-panel__field button {
 		width: 100%;
 	}
 
+	.schedule-panel__header {
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+
+	.schedule-panel__header h3 {
+		font-size: 1.3rem;
+	}
+
 	.contact-section__map iframe {
-		min-height: 320px;
+		min-height: 280px;
+	}
+
+	.feature-grid,
+	.support-grid,
+	.mission-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.site-footer__inner {
+		padding: 1.5rem 0;
+		gap: 1.5rem;
+	}
+
+	.site-footer__bottom {
+		flex-direction: column;
+		gap: 0.4rem;
+		text-align: center;
+	}
+
+	.section-heading h2 {
+		font-size: clamp(1.6rem, 7vw, 2rem);
+	}
+}
+
+/* ───────── Small phones ───────── */
+@media (max-width: 480px) {
+	.site-header__inner {
+		gap: 0.5rem;
+	}
+
+	.brand__mark {
+		width: 38px;
+		height: 38px;
+		font-size: 0.75rem;
+	}
+
+	.brand {
+		gap: 0.6rem;
+	}
+
+	.brand__copy strong {
+		font-size: 0.82rem;
+	}
+
+	.hero-section__content {
+		padding: 1.5rem 1rem 1.5rem;
+	}
+
+	.hero-section h1 {
+		font-size: clamp(1.6rem, 9vw, 2.2rem);
+	}
+
+	.specialty-grid {
+		grid-template-columns: repeat(2, 1fr);
+		gap: 0.6rem;
+	}
+
+	.specialty-card {
+		min-height: 150px;
+		padding: 0.8rem 0.6rem;
+	}
+
+	.specialty-card__icon {
+		width: 44px;
+		height: 44px;
+		font-size: 1.2rem;
+	}
+
+	.specialty-card strong {
+		font-size: 0.9rem;
+	}
+
+	.schedule-grid {
+		grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+	}
+
+	.contact-section__info article {
+		padding: 0.8rem;
+	}
+
+	.menu-toggle {
+		width: 42px;
+		height: 42px;
+	}
+
+	.site-nav {
+		right: 0.75rem;
+		left: 0.75rem;
+		padding: 0.8rem;
 	}
 }
 

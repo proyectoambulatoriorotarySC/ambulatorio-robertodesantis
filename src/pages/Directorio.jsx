@@ -1,13 +1,14 @@
 import { useConfiguracion } from "../hooks/useConfiguracion";
-import { defaultHomeHero } from "../data/siteContent";
 import { mockConfiguracionGlobal } from "../data/mockData";
-import HeroSection from "../components/HeroSection";
+import ConsultasIntegrales from "../components/ConsultasIntegrales";
 
-const Home = () => {
+const Directorio = () => {
   const { configuracion } = useConfiguracion();
   const config = configuracion ?? mockConfiguracionGlobal;
 
-  return <HeroSection hero={defaultHomeHero} configuracion={config} />;
+  return (
+    <ConsultasIntegrales configuracion={config} />
+  );
 };
 
-export default Home;
+export default Directorio;

@@ -1,3 +1,5 @@
+import { Link } from "react-router-dom";
+
 const HeroSection = ({ hero, configuracion }) => {
   return (
     <section className="hero-section">
@@ -8,9 +10,9 @@ const HeroSection = ({ hero, configuracion }) => {
         <p>{hero.summary}</p>
 
         <div className="hero-section__actions">
-          <a href="#especialidades" className="button button--primary">
+          <Link to="/especialidades" className="button button--primary">
             Ver especialidades
-          </a>
+          </Link>
           <a href={`tel:${configuracion?.telefonoContacto || "0414-191-5455"}`} className="button button--secondary">
             Llamar al ambulatorio
           </a>
