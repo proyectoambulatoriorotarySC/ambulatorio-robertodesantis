@@ -1,24 +1,25 @@
-// src/services/especialidadesService.js
-import { auth, db } from "./firebase"; // Tu instancia de Firestore
-import { 
-  collection, 
-  getDocs, 
-  doc, 
-  getDoc, 
-  setDoc, 
-  updateDoc, 
+﻿// src/services/especialidadesService.js
+import { auth, db } from "./firebase";
+import {
+  collection,
+  getDocs,
+  doc,
+  getDoc,
+  setDoc,
+  updateDoc,
   deleteDoc,
   addDoc,
   serverTimestamp
 } from "firebase/firestore";
 
-// Definimos la referencia a la "tabla" (Colección) en Firestore
 const coleccionRef = collection(db, "especialidades");
 const auditoriaRef = collection(db, "auditoria");
 
 const normalizarPayload = (especialidadData) => ({
   ...especialidadData,
   nombre: especialidadData.nombre ?? "",
+  icon: especialidadData.icon ?? "",
+  descripcion: especialidadData.descripcion ?? "",
   medicos: especialidadData.medicos ?? [],
   textoHorarioPlano: especialidadData.textoHorarioPlano ?? "",
   estudioIncluido: especialidadData.estudioIncluido ?? "",
@@ -37,14 +38,12 @@ const registrarAuditoria = async ({ accion, entidad, entidadId, detalle }) => {
 };
 
 export const especialidadesService = {
-  // GET ALL - Obtener las 18 especialidades (Para los pacientes y el buscador)
   getAll: async () => {
     try {
       const querySnapshot = await getDocs(coleccionRef);
-      // Mapeamos los documentos de Firebase a un array de objetos JSON común
       return querySnapshot.docs.map(documento => ({
-        id: documento.id, // El ID del documento (ej: 'gastroenterologia')
-        ...documento.data() // Los campos internos (nombre, medicos, cronograma...)
+        id: documento.id,
+        ...documento.data()
       }));
     } catch (error) {
       console.error("Error al obtener especialidades:", error);
@@ -52,7 +51,6 @@ export const especialidadesService = {
     }
   },
 
-  // GET BY ID - Buscar una sola (Por si se necesita una vista de detalle)
   getById: async (id) => {
     try {
       const docRef = doc(db, "especialidades", id);
@@ -68,10 +66,8 @@ export const especialidadesService = {
     }
   },
 
-  // CREATE - Guardar una nueva desde el panel de administración
   create: async (id, especialidadData) => {
     try {
-      // Usamos setDoc especificando el ID para que quede limpio (ej: 'cardiologia')
       const docRef = doc(db, "especialidades", id);
       const payload = normalizarPayload(especialidadData);
       await setDoc(docRef, payload);
@@ -79,7 +75,7 @@ export const especialidadesService = {
         accion: "CREAR",
         entidad: "especialidades",
         entidadId: id,
-        detalle: `Se creó la especialidad ${payload.nombre || id}`,
+        detalle: "Se creó la especialidad " + payload.nombre || id,
       });
       return { id, ...payload };
     } catch (error) {
@@ -88,7 +84,6 @@ export const especialidadesService = {
     }
   },
 
-  // UPDATE - Modificar horarios o médicos de una especialidad existente
   update: async (id, especialidadData) => {
     try {
       const docRef = doc(db, "especialidades", id);
@@ -98,7 +93,7 @@ export const especialidadesService = {
         accion: "ACTUALIZAR",
         entidad: "especialidades",
         entidadId: id,
-        detalle: `Se actualizó la especialidad ${payload.nombre || id}`,
+        detalle: "Se actualizó la especialidad " + payload.nombre || id,
       });
       return { id, ...payload };
     } catch (error) {
@@ -107,7 +102,6 @@ export const especialidadesService = {
     }
   },
 
-  // DELETE - Eliminar una especialidad del directorio
   delete: async (id) => {
     try {
       const docRef = doc(db, "especialidades", id);
@@ -116,7 +110,7 @@ export const especialidadesService = {
         accion: "ELIMINAR",
         entidad: "especialidades",
         entidadId: id,
-        detalle: `Se eliminó la especialidad ${id}`,
+        detalle: "Se eliminó la especialidad " + id,
       });
     } catch (error) {
       console.error("Error al eliminar especialidad:", error);

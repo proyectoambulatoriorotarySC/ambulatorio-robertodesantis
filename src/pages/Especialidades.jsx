@@ -1,9 +1,8 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useMemo, useState } from "react";
 import { useEspecialidades } from "../hooks/useEspecialidades";
 import { makeFallbackSchedule, specialtyCatalog } from "../data/siteContent";
 import Buscador from "../components/Buscador";
 import ListaEspecialidades from "../components/ListaEspecialidades";
-import HorarioEspecialidad from "../components/HorarioEspecialidad";
 
 const normalizeValue = (value = "") =>
   value
@@ -62,7 +61,6 @@ const mergeEspecialidades = (backendSpecialties = []) => {
 const Especialidades = () => {
   const { especialidades } = useEspecialidades();
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedId, setSelectedId] = useState(specialtyCatalog[0]?.id);
 
   const specialities = useMemo(() => mergeEspecialidades(especialidades), [especialidades]);
 
@@ -83,20 +81,6 @@ const Especialidades = () => {
     });
   }, [searchTerm, specialities]);
 
-  useEffect(() => {
-    if (!filteredSpecialities.length) {
-      return;
-    }
-
-    const selectedExists = filteredSpecialities.some((item) => item.id === selectedId);
-
-    if (!selectedExists) {
-      setSelectedId(filteredSpecialities[0].id);
-    }
-  }, [filteredSpecialities, selectedId]);
-
-  const selectedSpecialty = filteredSpecialities.find((item) => item.id === selectedId) || filteredSpecialities[0];
-
   return (
     <>
       <section className="content-section content-section--search">
@@ -113,13 +97,7 @@ const Especialidades = () => {
           <span>Actualización en tiempo real de configuración y catálogo</span>
         </div>
 
-        <ListaEspecialidades
-          especialidades={filteredSpecialities}
-          activeId={selectedSpecialty?.id}
-          onSelect={(item) => setSelectedId(item.id)}
-        />
-
-        <HorarioEspecialidad especialidad={selectedSpecialty} />
+        <ListaEspecialidades especialidades={filteredSpecialities} />
       </section>
     </>
   );

@@ -1,13 +1,37 @@
-import { useEffect, useMemo, useState } from "react";
+﻿import { useEffect, useMemo, useState } from "react";
 import { useEspecialidades } from "../hooks/useEspecialidades";
 import { specialtyCatalog } from "../data/siteContent";
 
+const iconOptions = [
+  { value: "Stethoscope", label: "Estetoscopio" },
+  { value: "Heart", label: "Corazón" },
+  { value: "Activity", label: "Actividad" },
+  { value: "Apple", label: "Manzana" },
+  { value: "Brain", label: "Cerebro" },
+  { value: "Baby", label: "Bebé" },
+  { value: "Bone", label: "Hueso" },
+  { value: "Diamond", label: "Diamante" },
+  { value: "Droplets", label: "Gotas" },
+  { value: "Eye", label: "Ojo" },
+  { value: "Ear", label: "Oído" },
+  { value: "Filter", label: "Filtro" },
+  { value: "FlaskConical", label: "Laboratorio" },
+  { value: "Flower2", label: "Flor" },
+  { value: "MessageCircle", label: "Diálogo" },
+  { value: "Scan", label: "Escáner" },
+  { value: "ScanFace", label: "Piel" },
+  { value: "Scissors", label: "Tijeras" },
+  { value: "Syringe", label: "Jeringa" },
+  { value: "Venus", label: "Mujer" },
+  { value: "Wind", label: "Viento" },
+];
+
 const days = ["lunes", "martes", "miercoles", "jueves", "viernes"];
-const turnos = ["mañana", "tarde"];
+const turnos = ["ma\u00f1ana", "tarde"];
 
 const emptySchedule = () =>
   days.reduce((accumulator, day) => {
-    accumulator[day] = { mañana: false, tarde: false };
+    accumulator[day] = { ma\u00f1ana: false, tarde: false };
     return accumulator;
   }, {});
 
@@ -29,7 +53,7 @@ const buildScheduleFromData = (data) => {
 
     if (source && typeof source === "object" && !Array.isArray(source)) {
       accumulator[day] = {
-        mañana: Boolean(source.mañana),
+        ma\u00f1ana: Boolean(source.ma\u00f1ana),
         tarde: Boolean(source.tarde),
       };
       return accumulator;
@@ -37,14 +61,14 @@ const buildScheduleFromData = (data) => {
 
     if (Array.isArray(source)) {
       accumulator[day] = {
-        mañana: source.includes("mañana"),
+        ma\u00f1ana: source.includes("ma\u00f1ana"),
         tarde: source.includes("tarde"),
       };
       return accumulator;
     }
 
     accumulator[day] = {
-      mañana: false,
+      ma\u00f1ana: false,
       tarde: false,
     };
 
@@ -59,6 +83,8 @@ const AdminEspecialidades = () => {
   const [formState, setFormState] = useState({
     id: "",
     nombre: "",
+    icon: "",
+    descripcion: "",
     medicoInput: "",
     medicos: [],
     textoHorarioPlano: "",
@@ -88,6 +114,8 @@ const AdminEspecialidades = () => {
     setFormState({
       id: item.id || "",
       nombre: item.nombre || "",
+      icon: item.icon || "",
+      descripcion: item.descripcion || "",
       medicoInput: "",
       medicos: item.medicos || [],
       textoHorarioPlano: item.textoHorarioPlano || "",
@@ -146,6 +174,8 @@ const AdminEspecialidades = () => {
     setFormState({
       id: "",
       nombre: "",
+      icon: "",
+      descripcion: "",
       medicoInput: "",
       medicos: [],
       textoHorarioPlano: "",
@@ -167,6 +197,8 @@ const AdminEspecialidades = () => {
 
     const payload = {
       nombre: formState.nombre.trim(),
+      icon: formState.icon,
+      descripcion: formState.descripcion.trim(),
       medicos: formState.medicos,
       textoHorarioPlano: formState.textoHorarioPlano.trim(),
       estudioIncluido: formState.estudioIncluido.trim(),
@@ -198,6 +230,10 @@ const AdminEspecialidades = () => {
 
   const deleteCurrent = async () => {
     if (!selectedId) {
+      return;
+    }
+
+    if (!window.confirm(`\u00bfEst\u00e1s seguro de eliminar "${formState.nombre}"? Esta acci\u00f3n no se puede deshacer.`)) {
       return;
     }
 
@@ -234,7 +270,7 @@ const AdminEspecialidades = () => {
               onClick={() => handleSelect(item.id)}
             >
               <strong>{item.nombre}</strong>
-              <span>{(item.medicos || []).join(" · ") || "Sin médicos"}</span>
+              <span>{(item.medicos || []).join(" \u00b7 ") || "Sin m\u00e9dicos"}</span>
             </button>
           ))}
         </aside>
@@ -247,14 +283,35 @@ const AdminEspecialidades = () => {
 
           <label>
             Nombre de la especialidad
-            <input name="nombre" value={formState.nombre} onChange={handleFieldChange} placeholder="Cardiología" />
+            <input name="nombre" value={formState.nombre} onChange={handleFieldChange} placeholder="Cardiolog\u00eda" />
+          </label>
+
+          <label>
+            Icono representativo
+            <select name="icon" value={formState.icon} onChange={handleFieldChange}>
+              <option value="">Seleccionar icono...</option>
+              {iconOptions.map((opt) => (
+                <option key={opt.value} value={opt.value}>{opt.label}</option>
+              ))}
+            </select>
+          </label>
+
+          <label>
+            Descripci\u00f3n
+            <textarea
+              name="descripcion"
+              rows="3"
+              value={formState.descripcion}
+              onChange={handleFieldChange}
+              placeholder="Breve descripci\u00f3n de la especialidad..."
+            />
           </label>
 
           <div className="admin-doctors">
             <label>
-              Agregar médico
+              Agregar m\u00e9dico
               <div className="admin-inline-input">
-                <input value={newDoctor} onChange={(event) => setNewDoctor(event.target.value)} placeholder="Nombre del médico" />
+                <input value={newDoctor} onChange={(event) => setNewDoctor(event.target.value)} placeholder="Nombre del m\u00e9dico" />
                 <button type="button" className="button button--secondary" onClick={addDoctor}>
                   Agregar
                 </button>
@@ -266,7 +323,7 @@ const AdminEspecialidades = () => {
                 <span key={`${medico}-${index}`} className="admin-chip">
                   {medico}
                   <button type="button" onClick={() => removeDoctor(index)} aria-label={`Eliminar ${medico}`}>
-                    ×
+                    \u00d7
                   </button>
                 </span>
               ))}
@@ -280,7 +337,7 @@ const AdminEspecialidades = () => {
               rows="3"
               value={formState.textoHorarioPlano}
               onChange={handleFieldChange}
-              placeholder="Lunes a viernes por la mañana y la tarde."
+              placeholder="Lunes a viernes por la ma\u00f1ana y la tarde."
             />
           </label>
 
@@ -296,7 +353,7 @@ const AdminEspecialidades = () => {
           </label>
 
           <div className="admin-schedule-editor">
-            <strong>Horarios por día</strong>
+            <strong>Horarios por d\u00eda</strong>
             <div className="admin-schedule-grid">
               {days.map((day) => (
                 <article key={day} className="admin-schedule-day">

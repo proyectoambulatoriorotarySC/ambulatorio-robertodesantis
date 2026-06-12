@@ -1,7 +1,8 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+﻿import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import LayoutPublico from "./components/LayoutPublico";
 import Home from "./pages/Home";
 import Especialidades from "./pages/Especialidades";
+import EspecialidadDetalle from "./pages/EspecialidadDetalle";
 import Directorio from "./pages/Directorio";
 import Servicios from "./pages/Servicios";
 import Nosotros from "./pages/Nosotros";
@@ -20,6 +21,7 @@ function App() {
         <Route element={<LayoutPublico />}>
           <Route path="/" element={<Home />} />
           <Route path="/especialidades" element={<Especialidades />} />
+          <Route path="/especialidades/:id" element={<EspecialidadDetalle />} />
           <Route path="/directorio" element={<Directorio />} />
           <Route path="/servicios" element={<Servicios />} />
           <Route path="/nosotros" element={<Nosotros />} />
