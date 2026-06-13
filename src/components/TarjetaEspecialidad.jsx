@@ -25,8 +25,22 @@ const iconComponents = {
   Wind: Icons.Wind,
 };
 
-const TarjetaEspecialidad = ({ especialidad, isActive }) => {
+const normalizeValue = (value = "") =>
+  value
+    .toString()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .trim();
+
+const TarjetaEspecialidad = ({ especialidad, isActive, searchTerm }) => {
   const IconComponent = iconComponents[especialidad.icon] || Icons.Stethoscope;
+
+  const matchingDoctors = searchTerm
+    ? (especialidad.medicos || []).filter((doc) =>
+        normalizeValue(doc).includes(normalizeValue(searchTerm))
+      )
+    : [];
 
   return (
     <Link
@@ -37,6 +51,16 @@ const TarjetaEspecialidad = ({ especialidad, isActive }) => {
         <IconComponent size={28} />
       </span>
       <strong>{especialidad.nombre}</strong>
+
+      {matchingDoctors.length > 0 && (
+        <div className="specialty-card__match">
+          {matchingDoctors.map((doc, i) => (
+            <span key={i} className="specialty-card__doctor-badge">
+              <Icons.User size={12} /> {doc}
+            </span>
+          ))}
+        </div>
+      )}
     </Link>
   );
 };

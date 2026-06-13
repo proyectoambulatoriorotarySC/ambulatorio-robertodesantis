@@ -62,7 +62,7 @@ const Especialidades = () => {
           <span>Actualización en tiempo real desde la base de datos</span>
         </div>
 
-        <ListaEspecialidades especialidades={filteredSpecialities} />
+        <ListaEspecialidades especialidades={filteredSpecialities} searchTerm={searchTerm} />
       </section>
     </>
   );
