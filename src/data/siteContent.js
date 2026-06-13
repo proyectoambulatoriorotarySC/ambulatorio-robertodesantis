@@ -210,7 +210,7 @@ export const specialtyCatalog = [
   {
     id: "odontologia",
     nombre: "Odontología",
-    icon: "Diamond",
+    icon: "Tooth",
     medicos: ["Dra. Mayra García", "Dra. Yorvelys Gómez", "Dra. Janett Núñez"],
     textoHorarioPlano: "De lunes a viernes en la mañana y de martes a jueves en la tarde.",
     estudioIncluido: "",

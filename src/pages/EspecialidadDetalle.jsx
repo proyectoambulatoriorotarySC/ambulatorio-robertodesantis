@@ -3,28 +3,50 @@ import { useMemo } from "react";
 import { useEspecialidades } from "../hooks/useEspecialidades";
 import { specialtyCatalog } from "../data/siteContent";
 import * as Icons from "lucide-react";
+import { Tooth as CustomTooth } from "../components/CustomIcons";
 import HorarioEspecialidad from "../components/HorarioEspecialidad";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const iconComponents = {
   Activity: Icons.Activity,
+  Ambulance: Icons.Ambulance,
   Apple: Icons.Apple,
   Baby: Icons.Baby,
+  Bandage: Icons.Bandage,
   Bone: Icons.Bone,
   Brain: Icons.Brain,
+  BrainCircuit: Icons.BrainCircuit,
+  BriefcaseMedical: Icons.BriefcaseMedical,
   Diamond: Icons.Diamond,
+  Dna: Icons.Dna,
   Droplets: Icons.Droplets,
   Ear: Icons.Ear,
   Eye: Icons.Eye,
   Filter: Icons.Filter,
   FlaskConical: Icons.FlaskConical,
   Flower2: Icons.Flower2,
+  HandHelping: Icons.HandHelping,
+  HandPlatter: Icons.HandPlatter,
   Heart: Icons.Heart,
+  HeartPulse: Icons.HeartPulse,
+  Hospital: Icons.Hospital,
+  Lungs: Icons.Lungs,
   MessageCircle: Icons.MessageCircle,
+  Microscope: Icons.Microscope,
+  Pill: Icons.Pill,
+  Radiation: Icons.Radiation,
+  Scale: Icons.Scale,
   Scan: Icons.Scan,
   ScanFace: Icons.ScanFace,
   Scissors: Icons.Scissors,
+  ShieldPlus: Icons.ShieldPlus,
   Stethoscope: Icons.Stethoscope,
   Syringe: Icons.Syringe,
+  Tablets: Icons.Tablets,
+  Thermometer: Icons.Thermometer,
+  Tooth: CustomTooth,
+  UserRound: Icons.UserRound,
+  Users: Icons.Users,
   Venus: Icons.Venus,
   Wind: Icons.Wind,
 };
@@ -50,11 +72,7 @@ const EspecialidadDetalle = () => {
   }, [id, especialidades]);
 
   if (isLoading) {
-    return (
-      <div className="loading-state">
-        <p>Cargando detalles...</p>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando detalles de la especialidad..." />;
   }
 
   if (!especialidad) {

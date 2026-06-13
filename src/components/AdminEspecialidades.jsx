@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useEspecialidades } from "../hooks/useEspecialidades";
 import { specialtyCatalog } from "../data/siteContent";
 import * as LucideIcons from "lucide-react";
+import { Tooth as CustomTooth } from "./CustomIcons";
 
 const iconOptions = [
   { value: "Stethoscope", label: "Estetoscopio", Icon: LucideIcons.Stethoscope },
@@ -34,6 +35,11 @@ const iconOptions = [
   { value: "Apple", label: "Nutrición/Dieta", Icon: LucideIcons.Apple },
   { value: "Wind", label: "Respiratorio", Icon: LucideIcons.Wind },
   { value: "Droplets", label: "Sangre/Urología", Icon: LucideIcons.Droplets },
+  { value: "Tooth", label: "Odontología/Diente", Icon: CustomTooth },
+  { value: "HandPlatter", label: "Servicios/Atención", Icon: LucideIcons.HandPlatter },
+  { value: "UserRound", label: "Usuario/Personal", Icon: LucideIcons.UserRound },
+  { value: "Users", label: "Usuarios/Familia", Icon: LucideIcons.Users },
+  { value: "HandHelping", label: "Ayuda/Apoyo", Icon: LucideIcons.HandHelping },
 ].filter(opt => !!opt.Icon);
 
 const days = ["lunes", "martes", "miercoles", "jueves", "viernes"];

@@ -3,6 +3,7 @@ import { useEspecialidades } from "../hooks/useEspecialidades";
 import { makeFallbackSchedule, specialtyCatalog } from "../data/siteContent";
 import Buscador from "../components/Buscador";
 import ListaEspecialidades from "../components/ListaEspecialidades";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const normalizeValue = (value = "") =>
   value
@@ -39,11 +40,7 @@ const Especialidades = () => {
   }, [searchTerm, especialidades]);
 
   if (isLoading) {
-    return (
-      <div className="loading-state">
-        <p>Cargando catálogo de especialidades...</p>
-      </div>
-    );
+    return <LoadingSpinner message="Cargando catálogo de especialidades..." />;
   }
 
   return (
