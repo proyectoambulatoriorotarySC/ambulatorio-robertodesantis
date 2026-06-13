@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
 import { useEspecialidades } from "../hooks/useEspecialidades";
-import { specialtyCatalog } from "../data/siteContent";
 import * as LucideIcons from "lucide-react";
 import { Tooth as CustomTooth } from "./CustomIcons";
 
@@ -210,33 +209,6 @@ const AdminEspecialidades = () => {
     setStatus({ type: "", message: "Creando especialidad nueva. Por favor, rellena los campos." });
   };
 
-  const syncCatalog = async () => {
-    if (!window.confirm("¿Deseas subir todas las especialidades del código que faltan en la base de datos?")) return;
-
-    setSaving(true);
-    setStatus({ type: "info", message: "Sincronizando catálogo... por favor espera." });
-
-    let createdCount = 0;
-    try {
-      for (const item of specialtyCatalog) {
-        const exists = especialidades.find(esp => esp.id === item.id);
-        if (!exists) {
-          await createEspecialidad(item.id, {
-            ...item,
-            estudioIncluido: item.estudioIncluido || item.estudioOpcional || ""
-          });
-          createdCount++;
-        }
-      }
-      setStatus({ type: "success", message: `Sincronización completada. Se crearon ${createdCount} especialidades nuevas.` });
-    } catch (error) {
-      console.error(error);
-      setStatus({ type: "error", message: "Ocurrió un error durante la sincronización." });
-    } finally {
-      setSaving(false);
-    }
-  };
-
   const isFormValid = useMemo(() => {
     return (
       formState.nombre.trim().length > 0 &&
@@ -321,9 +293,6 @@ const AdminEspecialidades = () => {
           <button type="button" className="button button--secondary" onClick={resetForm}>
             Nueva especialidad
           </button>
-          <button type="button" className="button button--secondary" onClick={syncCatalog} disabled={saving}>
-            Sincronizar Catálogo Local
-          </button>
         </div>
       </div>
 
@@ -344,7 +313,6 @@ const AdminEspecialidades = () => {
           ) : (
             <div style={{ padding: '1rem', textAlign: 'center', color: '#666' }}>
               <p>Base de datos vacía.</p>
-              <p style={{ fontSize: '0.8rem' }}>Usa "Sincronizar" para subir el catálogo inicial.</p>
             </div>
           )}
         </aside>
