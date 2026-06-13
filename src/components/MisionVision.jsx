@@ -1,36 +1,65 @@
+import { useState } from "react";
 import { institutionalContent } from "../data/siteContent";
-import { mockConfiguracionGlobal } from "../data/mockData";
+import { X, ArrowRightCircle } from "lucide-react";
 
-const MisionVision = ({ configuracion }) => {
-  const data = configuracion ?? mockConfiguracionGlobal;
+const MisionVision = () => {
+  const [activeModal, setActiveModal] = useState(null);
+  const openModal = (type) => setActiveModal(type);
+  const closeModal = () => setActiveModal(null);
 
   return (
     <section className="content-section" id="nosotros">
       <div className="section-heading">
         <span className="section-kicker section-kicker--neutral">Nuestra Institución</span>
         <h2>Misión, Visión e Historia</h2>
-        <p>Información institucional con respaldo local y datos operativos de referencia.</p>
+        <p>Haz clic en Misión o Visión para leer el texto completo.</p>
       </div>
 
       <div className="mission-grid">
-        <article className="mission-card">
+        <article 
+          className="mission-card mission-card--interactive" 
+          onClick={() => openModal("mision")}
+        >
           <strong>Misión</strong>
-          <p>{institutionalContent.mision}</p>
+          <p className="mission-card__preview">{institutionalContent.mision}</p>
+          <div className="mission-card__cta">
+            <span>Leer texto completo</span>
+            <ArrowRightCircle size={18} />
+          </div>
         </article>
-        <article className="mission-card">
+
+        <article 
+          className="mission-card mission-card--interactive" 
+          onClick={() => openModal("vision")}
+        >
           <strong>Visión</strong>
-          <p>{institutionalContent.vision}</p>
+          <p className="mission-card__preview">{institutionalContent.vision}</p>
+          <div className="mission-card__cta">
+            <span>Leer texto completo</span>
+            <ArrowRightCircle size={18} />
+          </div>
         </article>
+
         <article className="mission-card">
           <strong>Historia</strong>
           <p>{institutionalContent.historia}</p>
         </article>
-        <article className="mission-card mission-card--highlight">
-          <strong>Horario general</strong>
-          <p>{data.horarioGeneral}</p>
-          <p>{data.direccionFisica}</p>
-        </article>
+
       </div>
+
+      {activeModal && (
+        <div className="mission-modal-overlay" onClick={closeModal}>
+          <div className="mission-modal" onClick={(e) => e.stopPropagation()}>
+            <button className="mission-modal__close" onClick={closeModal} aria-label="Cerrar">
+              <X size={28} />
+            </button>
+            <div className="mission-modal__content">
+              <strong>{activeModal === "mision" ? "Nuestra Misión" : "Nuestra Visión"}</strong>
+              <p>{activeModal === "mision" ? institutionalContent.mision : institutionalContent.vision}</p>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

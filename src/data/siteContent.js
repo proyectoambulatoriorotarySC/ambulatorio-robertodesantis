@@ -20,13 +20,7 @@ const scheduleMorning = buildCronograma({
   viernes: ["mañana"],
 });
 
-const scheduleAfternoon = buildCronograma({
-  lunes: ["tarde"],
-  martes: ["tarde"],
-  miercoles: ["tarde"],
-  jueves: ["tarde"],
-  viernes: ["tarde"],
-});
+
 
 const scheduleFull = buildCronograma({
   lunes: ["mañana", "tarde"],
@@ -46,9 +40,9 @@ const scheduleAlternating = buildCronograma({
 
 export const institutionalContent = {
   mision:
-    "Brindar atención médica ética, humana y oportuna a la comunidad de Ventuari y Puerto Ordaz, con precios solidarios y vocación de servicio.",
+    "Prestar servicios médicos y odontológicos comunitarios mediante programas orientados a la promoción, prevención, diagnóstico, tratamiento, rehabilitación y mejoramiento de la calidad de salud de la sociedad venezolana a entes naturales y jurídicos a través de una sólida red de servicios oportunos, fundamentados en la ética, la calidez humana, la tecnología apropiada y la coordinación con entidades públicas y privadas, con la eficiencia en el uso de los recursos de forma confiable y segura.",
   vision:
-    "Ser el ambulatorio de referencia en atención primaria y especializada, reconocidos por nuestra cercanía, resolución clínica y compromiso social.",
+    "Ser líder regional en la prestación de servicios integrales de salud en el área preventiva y curativa, logrando la satisfacción de los usuarios, mediante una red de centros médicos, constituido por personal técnico y profesional capacitado, especializado y humano, con procesos de vanguardia que permitan mejor relación entre las comunidades y el movimiento rotario.",
   historia:
     "El Ambulatorio Roberto De Santis nació como iniciativa comunitaria del Rotary Club para acercar servicios médicos confiables a la población local.",
 };
