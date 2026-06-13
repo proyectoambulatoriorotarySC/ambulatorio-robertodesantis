@@ -22,19 +22,23 @@ const normalizarPayload = (especialidadData) => ({
   descripcion: especialidadData.descripcion ?? "",
   medicos: especialidadData.medicos ?? [],
   textoHorarioPlano: especialidadData.textoHorarioPlano ?? "",
-  estudioIncluido: especialidadData.estudioIncluido ?? "",
+  estudioIncluido: especialidadData.estudioIncluido ?? especialidadData.estudioAdicional ?? especialidadData.estudioOpcional ?? "",
   cronograma: especialidadData.cronograma ?? {},
 });
 
 const registrarAuditoria = async ({ accion, entidad, entidadId, detalle }) => {
-  await addDoc(auditoriaRef, {
-    accion,
-    entidad,
-    entidadId,
-    detalle,
-    usuario: auth.currentUser?.email || "sistema",
-    fechaHora: serverTimestamp(),
-  });
+  try {
+    await addDoc(auditoriaRef, {
+      accion,
+      entidad,
+      entidadId,
+      detalle,
+      usuario: auth.currentUser?.email || "sistema",
+      fechaHora: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error("Error silencioso al registrar auditoría:", error);
+  }
 };
 
 export const especialidadesService = {

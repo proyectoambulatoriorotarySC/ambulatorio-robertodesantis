@@ -2,6 +2,11 @@ import { mockConfiguracionGlobal } from "../data/mockData";
 
 const MapaUbicacion = ({ configuracion }) => {
   const data = configuracion ?? mockConfiguracionGlobal;
+  const whatsappNumber = data.whatsappContacto?.replace(/[^0-9]/g, "");
+  const encodedMessage = encodeURIComponent(data.mensajePredefinido || "Hola, quisiera solicitar información.");
+  const contactHref = whatsappNumber 
+    ? `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
+    : `tel:${data.telefonoContacto?.replace(/[^0-9]/g, "")}`;
 
   return (
     <section className="contact-section content-section" id="ubicacion">
@@ -23,8 +28,13 @@ const MapaUbicacion = ({ configuracion }) => {
           </article>
         </div>
 
-        <a className="contact-call" href={`tel:${data.telefonoContacto}`}>
-          Llamar ahora: {data.telefonoContacto}
+        <a 
+          className="contact-call" 
+          href={contactHref}
+          target={whatsappNumber ? "_blank" : "_self"}
+          rel="noopener noreferrer"
+        >
+          {whatsappNumber ? "Enviar mensaje WhatsApp" : `Llamar ahora: ${data.telefonoContacto}`}
         </a>
       </div>
 

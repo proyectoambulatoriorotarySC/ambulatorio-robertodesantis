@@ -6,6 +6,13 @@ const Footer = () => {
   const { configuracion } = useConfiguracion();
   const footerData = configuracion ?? mockConfiguracionGlobal;
 
+  // Generamos el enlace de contacto (Preferiblemente WhatsApp si está configurado)
+  const whatsappNumber = footerData.whatsappContacto?.replace(/[^0-9]/g, "");
+  const encodedMessage = encodeURIComponent(footerData.mensajePredefinido || "");
+  const contactHref = whatsappNumber 
+    ? `https://wa.me/${whatsappNumber}${encodedMessage ? `?text=${encodedMessage}` : ""}`
+    : `tel:${footerData.telefonoContacto?.replace(/[^0-9]/g, "")}`;
+
   return (
     <footer className="site-footer">
       <div className="site-footer__inner">
@@ -16,15 +23,21 @@ const Footer = () => {
 
         <div>
           <p className="site-footer__title">Contacto</p>
-          <a href={`tel:${footerData.telefonoContacto}`} className="site-footer__link">
+          <a 
+            href={contactHref} 
+            className="site-footer__link" 
+            target={whatsappNumber ? "_blank" : "_self"}
+            rel="noopener noreferrer"
+          >
             {footerData.telefonoContacto}
+            {whatsappNumber && <span style={{marginLeft: '0.5rem', fontSize: '0.8em'}}>(WhatsApp)</span>}
           </a>
           <p className="site-footer__text">{footerData.horarioGeneral}</p>
         </div>
 
         <div>
           <p className="site-footer__title">Accesos</p>
-          <Link to="/especialidades" className="site-footer__link">Especialidades</Link>
+          <Link to="/directorio" className="site-footer__link">Directorio</Link>
           <Link to="/nosotros" className="site-footer__link">Ubicación</Link>
         </div>
       </div>

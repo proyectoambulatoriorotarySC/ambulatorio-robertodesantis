@@ -7,14 +7,18 @@ const docRef = doc(db, "configuracion", "global");
 const auditoriaRef = collection(db, "auditoria");
 
 const registrarAuditoria = async (accion, detalle) => {
-  await addDoc(auditoriaRef, {
-    accion,
-    entidad: "configuracion",
-    entidadId: "global",
-    detalle,
-    usuario: auth.currentUser?.email || "sistema",
-    fechaHora: serverTimestamp(),
-  });
+  try {
+    await addDoc(auditoriaRef, {
+      accion,
+      entidad: "configuracion",
+      entidadId: "global",
+      detalle,
+      usuario: auth.currentUser?.email || "sistema",
+      fechaHora: serverTimestamp(),
+    });
+  } catch (error) {
+    console.error("Error silencioso al registrar auditoría:", error);
+  }
 };
 
 export const configuracionService = {

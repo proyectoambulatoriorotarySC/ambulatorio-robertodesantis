@@ -30,15 +30,13 @@ const TarjetaEspecialidad = ({ especialidad, isActive }) => {
 
   return (
     <Link
-      to={`/especialidades/${especialidad.id}`}
+      to={`/directorio/${especialidad.id}`}
       className={`specialty-card ${isActive ? "specialty-card--active" : ""}`}
     >
       <span className={`specialty-card__icon specialty-card__icon--${especialidad.accent || "blue"}`} aria-hidden="true">
         <IconComponent size={28} />
       </span>
       <strong>{especialidad.nombre}</strong>
-      <span className="specialty-card__meta">Incluye estudio</span>
-      <span className="specialty-card__study">{especialidad.estudioIncluido}</span>
     </Link>
   );
 };

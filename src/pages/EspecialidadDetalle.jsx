@@ -39,23 +39,23 @@ const normalizeValue = (value = "") =>
 
 const EspecialidadDetalle = () => {
   const { id } = useParams();
-  const { especialidades } = useEspecialidades();
+  const { especialidades, isLoading } = useEspecialidades();
 
   const especialidad = useMemo(() => {
     const normalizedId = normalizeValue(id);
 
-    const fromBackend = especialidades.find(
-      (item) => normalizeValue(item.id) === normalizedId || normalizeValue(item.nombre) === normalizedId
-    );
-
-    if (fromBackend) {
-      return fromBackend;
-    }
-
-    return specialtyCatalog.find(
+    return especialidades.find(
       (item) => normalizeValue(item.id) === normalizedId || normalizeValue(item.nombre) === normalizedId
     );
   }, [id, especialidades]);
+
+  if (isLoading) {
+    return (
+      <div className="loading-state">
+        <p>Cargando detalles...</p>
+      </div>
+    );
+  }
 
   if (!especialidad) {
     return (
@@ -63,9 +63,9 @@ const EspecialidadDetalle = () => {
         <div className="section-heading">
           <span className="section-kicker">No encontrada</span>
           <h2>Especialidad no disponible</h2>
-          <p>La especialidad que buscas no existe o no est\u00e1 disponible actualmente.</p>
-          <Link to="/especialidades" className="button button--primary" style={{ marginTop: "1rem" }}>
-            Volver al listado
+          <p>La especialidad que buscas no existe o no está disponible actualmente.</p>
+          <Link to="/directorio" className="button button--primary" style={{ marginTop: "1rem" }}>
+            Volver al Directorio
           </Link>
         </div>
       </section>
@@ -77,7 +77,7 @@ const EspecialidadDetalle = () => {
   return (
     <section className="content-section">
       <div className="detail-header">
-        <Link to="/especialidades" className="detail-back">&larr; Volver a especialidades</Link>
+        <Link to="/directorio" className="detail-back">&larr; Volver al Directorio Médico</Link>
       </div>
 
       <div className="detail-card">
@@ -91,13 +91,9 @@ const EspecialidadDetalle = () => {
           </div>
         </div>
 
-        {especialidad.descripcion && (
-          <p className="detail-card__descripcion">{especialidad.descripcion}</p>
-        )}
-
         <div className="detail-card__info">
           <div className="detail-card__medicos">
-            <strong>M\u00e9dicos asignados</strong>
+            <strong>Médicos asignados</strong>
             <ul>
               {(especialidad.medicos || []).length > 0
                 ? especialidad.medicos.map((medico, i) => <li key={i}>{medico}</li>)
@@ -105,10 +101,12 @@ const EspecialidadDetalle = () => {
             </ul>
           </div>
 
-          <div className="detail-card__estudio">
-            <strong>Estudio incluido</strong>
-            <p>{especialidad.estudioIncluido || "No especificado"}</p>
-          </div>
+          {especialidad.estudioIncluido && (
+            <div className="detail-card__estudio">
+              <strong>Estudio / Servicio Adicional</strong>
+              <p>{especialidad.estudioIncluido}</p>
+            </div>
+          )}
         </div>
 
         <HorarioEspecialidad especialidad={especialidad} />

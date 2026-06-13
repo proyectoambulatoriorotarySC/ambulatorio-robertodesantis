@@ -12,74 +12,39 @@ const normalizeValue = (value = "") =>
     .toLowerCase()
     .trim();
 
-const mergeEspecialidades = (backendSpecialties = []) => {
-  const backendMap = new Map();
-
-  backendSpecialties.forEach((specialty) => {
-    const normalizedId = normalizeValue(specialty.id);
-    const normalizedName = normalizeValue(specialty.nombre);
-    backendMap.set(normalizedId, specialty);
-    backendMap.set(normalizedName, specialty);
-  });
-
-  const merged = specialtyCatalog.map((baseSpecialty) => {
-    const backendSpecialty = backendMap.get(normalizeValue(baseSpecialty.id)) || backendMap.get(normalizeValue(baseSpecialty.nombre));
-
-    if (!backendSpecialty) {
-      return baseSpecialty;
-    }
-
-    return {
-      ...baseSpecialty,
-      ...backendSpecialty,
-      cronograma: backendSpecialty.cronograma ?? baseSpecialty.cronograma ?? makeFallbackSchedule(baseSpecialty.nombre),
-      medicos: backendSpecialty.medicos ?? baseSpecialty.medicos,
-      estudioIncluido: backendSpecialty.estudioIncluido ?? baseSpecialty.estudioIncluido,
-      textoHorarioPlano: backendSpecialty.textoHorarioPlano ?? baseSpecialty.textoHorarioPlano,
-    };
-  });
-
-  backendSpecialties.forEach((specialty) => {
-    const normalizedId = normalizeValue(specialty.id);
-    const normalizedName = normalizeValue(specialty.nombre);
-
-    const alreadyIncluded = merged.some(
-      (item) => normalizeValue(item.id) === normalizedId || normalizeValue(item.nombre) === normalizedName
-    );
-
-    if (!alreadyIncluded) {
-      merged.push({
-        ...specialty,
-        cronograma: specialty.cronograma ?? makeFallbackSchedule(specialty.nombre),
-      });
-    }
-  });
-
-  return merged;
-};
-
 const Especialidades = () => {
-  const { especialidades } = useEspecialidades();
+  const { especialidades, isLoading } = useEspecialidades();
   const [searchTerm, setSearchTerm] = useState("");
-
-  const specialities = useMemo(() => mergeEspecialidades(especialidades), [especialidades]);
 
   const filteredSpecialities = useMemo(() => {
     const needle = normalizeValue(searchTerm);
 
     if (!needle) {
-      return specialities;
+      return especialidades;
     }
 
-    return specialities.filter((item) => {
-      const searchableText = [item.nombre, ...(item.medicos || []), item.estudioIncluido, item.textoHorarioPlano]
+    return especialidades.filter((item) => {
+      const searchableText = [
+        item.nombre,
+        ...(item.medicos || []),
+        item.estudioIncluido,
+        item.textoHorarioPlano
+      ]
         .filter(Boolean)
         .map(normalizeValue)
         .join(" ");
 
       return searchableText.includes(needle);
     });
-  }, [searchTerm, specialities]);
+  }, [searchTerm, especialidades]);
+
+  if (isLoading) {
+    return (
+      <div className="loading-state">
+        <p>Cargando catálogo de especialidades...</p>
+      </div>
+    );
+  }
 
   return (
     <>
@@ -94,7 +59,7 @@ const Especialidades = () => {
 
         <div className="specialty-summary">
           <span>{filteredSpecialities.length} resultados</span>
-          <span>Actualización en tiempo real de configuración y catálogo</span>
+          <span>Actualización en tiempo real desde la base de datos</span>
         </div>
 
         <ListaEspecialidades especialidades={filteredSpecialities} />

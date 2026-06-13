@@ -3,10 +3,10 @@ import { useState } from "react";
 
 const navigationItems = [
   { label: "Inicio", to: "/" },
-  { label: "Especialidades", to: "/especialidades" },
-  { label: "Directorio Médico", to: "/directorio" },
-  { label: "Servicios", to: "/servicios" },
   { label: "Nosotros", to: "/nosotros" },
+  { label: "Directorio Médico", to: "/directorio" },
+  { label: "Consultas Integrales", to: "/integrales" },
+  { label: "Servicios", to: "/servicios" },
 ];
 
 const Header = () => {

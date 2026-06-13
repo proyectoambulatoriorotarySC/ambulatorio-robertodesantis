@@ -1,6 +1,12 @@
 import { Link } from "react-router-dom";
 
 const HeroSection = ({ hero, configuracion }) => {
+  const whatsappNumber = configuracion?.whatsappContacto?.replace(/[^0-9]/g, "");
+  const encodedMessage = encodeURIComponent(configuracion?.mensajePredefinido || "Hola, quisiera solicitar información.");
+  const contactHref = whatsappNumber 
+    ? `https://wa.me/${whatsappNumber}?text=${encodedMessage}`
+    : `tel:${configuracion?.telefonoContacto?.replace(/[^0-9]/g, "") || "04141915455"}`;
+
   return (
     <section className="hero-section">
       <div className="hero-section__overlay" aria-hidden="true" />
@@ -10,11 +16,16 @@ const HeroSection = ({ hero, configuracion }) => {
         <p>{hero.summary}</p>
 
         <div className="hero-section__actions">
-          <Link to="/especialidades" className="button button--primary">
-            Ver especialidades
+          <Link to="/directorio" className="button button--primary">
+            Ver Directorio
           </Link>
-          <a href={`tel:${configuracion?.telefonoContacto || "0414-191-5455"}`} className="button button--secondary">
-            Llamar al ambulatorio
+          <a 
+            href={contactHref} 
+            className="button button--secondary"
+            target={whatsappNumber ? "_blank" : "_self"}
+            rel="noopener noreferrer"
+          >
+            {whatsappNumber ? "Enviar WhatsApp" : "Llamar al ambulatorio"}
           </a>
         </div>
       </div>
