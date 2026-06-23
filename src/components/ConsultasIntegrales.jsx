@@ -1,6 +1,8 @@
 import { consultationPackages } from "../data/siteContent";
 import { mockConfiguracionGlobal } from "../data/mockData";
 
+const accents = ["blue", "teal", "gold", "rose", "green"];
+
 const ConsultasIntegrales = ({ configuracion }) => {
   const packages = configuracion?.consultasIntegrales?.length
     ? configuracion.consultasIntegrales
@@ -17,8 +19,8 @@ const ConsultasIntegrales = ({ configuracion }) => {
       </div>
 
       <div className="feature-grid">
-        {packages.map((item) => (
-          <article key={item.title} className="feature-card">
+        {packages.map((item, i) => (
+          <article key={item.title} className={`feature-card feature-card--${accents[i % accents.length]}`}>
             <strong>{item.title}</strong>
             <p>{item.detail}</p>
           </article>

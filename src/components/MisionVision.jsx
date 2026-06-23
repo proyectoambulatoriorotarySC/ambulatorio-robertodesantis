@@ -17,7 +17,7 @@ const MisionVision = () => {
 
       <div className="mission-grid">
         <article 
-          className="mission-card mission-card--interactive" 
+          className="mission-card mission-card--interactive mission-card--accent-blue" 
           onClick={() => openModal("mision")}
         >
           <strong>Misión</strong>
@@ -29,7 +29,7 @@ const MisionVision = () => {
         </article>
 
         <article 
-          className="mission-card mission-card--interactive" 
+          className="mission-card mission-card--interactive mission-card--accent-teal" 
           onClick={() => openModal("vision")}
         >
           <strong>Visión</strong>
@@ -40,7 +40,7 @@ const MisionVision = () => {
           </div>
         </article>
 
-        <article className="mission-card">
+        <article className="mission-card mission-card--accent-gold">
           <strong>Historia</strong>
           <p>{institutionalContent.historia}</p>
         </article>
