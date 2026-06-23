@@ -345,6 +345,25 @@ export const defaultHomeHero = {
     "Comprometidos con el bienestar de la comunidad de Ventuari y Puerto Ordaz mediante atención médica oportuna, cercana y eficiente.",
 };
 
+/*
+ * ─── HERO CAROUSEL ───
+ * Para agregar imágenes al carrusel del inicio, añade los archivos en /public/
+ * y agrega un objeto a este arreglo. Ejemplo:
+ *   { src: '/mi-foto.jpg', alt: 'Descripción de la imagen' }
+ *
+ * Las imágenes deben estar en /public/ (carpeta raíz del proyecto).
+ * Se recomienda que tengan al menos 1200px de ancho para que se vean bien
+ * en pantallas grandes. Formatos recomendados: JPG o WebP.
+ *
+ * Actualmente se usan 3 slides con la misma imagen de placeholder.
+ * Reemplázalas cuando tengas las fotos reales del rotary.
+ */
+export const heroImages = [
+  { src: '/rotary.jpg', alt: 'Ambulatorio Roberto De Santis - Fachada' },
+  { src: '/rotary.jpg', alt: 'Ambulatorio Roberto De Santis - Instalaciones' },
+  { src: '/rotary.jpg', alt: 'Ambulatorio Roberto De Santis - Equipo médico' },
+];
+
 export const makeFallbackSchedule = (name = "") => {
   const normalized = name.toLowerCase();
 

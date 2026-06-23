@@ -30,6 +30,7 @@ body {
 	margin: 0;
 	font-family: var(--font-body);
 	color: var(--ink);
+	overflow-x: hidden;
 	background:
 		radial-gradient(circle at top left, rgba(15, 134, 255, 0.09), transparent 35%),
 		linear-gradient(180deg, #ffffff 0%, #f7fbff 24%, #edf4fb 100%);
@@ -54,6 +55,15 @@ button,
 input,
 textarea {
 	font: inherit;
+}
+
+button,
+a,
+label,
+input[type="checkbox"],
+input[type="radio"],
+select {
+	touch-action: manipulation;
 }
 
 img,
@@ -246,6 +256,7 @@ iframe {
 
 .aviso-banner p {
 	margin: 0;
+	line-height: 1.4;
 }
 
 .aviso-banner__tag {
@@ -254,6 +265,7 @@ iframe {
 	background: #1568da;
 	color: #fff;
 	font-size: 0.75rem;
+	flex-shrink: 0;
 }
 
 .hero-section {
@@ -858,6 +870,13 @@ iframe {
 	background: rgba(15, 134, 255, 0.05);
 }
 
+.admin-form__check input[type="checkbox"] {
+	width: 1.15rem;
+	height: 1.15rem;
+	accent-color: var(--primary);
+	flex-shrink: 0;
+}
+
 .not-found-page {
 	min-height: 100vh;
 	display: grid;
@@ -983,9 +1002,89 @@ iframe {
   to { opacity: 1; }
 }
 
+@keyframes fadePageIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
 @keyframes slideUp {
   from { transform: translateY(20px); opacity: 0; }
   to { transform: translateY(0); opacity: 1; }
+}
+
+/* ───────── Page transition ───────── */
+.page-content {
+  animation: fadePageIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ───────── Hero Carousel ───────── */
+.hero-carousel {
+  position: absolute;
+  inset: 0;
+  border-radius: 36px;
+  overflow: hidden;
+  z-index: 0;
+}
+
+.hero-carousel__slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: scale(1.05);
+}
+
+.hero-carousel__slide--active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.hero-carousel__dots {
+  position: absolute;
+  bottom: 1.25rem;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 0.6rem;
+  z-index: 3;
+}
+
+.hero-carousel__dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  background: transparent;
+  cursor: pointer;
+  padding: 0;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.hero-carousel__dot--active {
+  background: #fff;
+  border-color: #fff;
+}
+
+.hero-section::before {
+  content: none;
+}
+
+@media (max-width: 980px) {
+  .hero-carousel {
+    border-radius: 24px;
+  }
+
+  .hero-carousel__dots {
+    bottom: 1rem;
+  }
+
+  .hero-carousel__dot {
+    width: 8px;
+    height: 8px;
+  }
 }
 
 /* ───────── Tablet landscape / small desktop ───────── */
@@ -1027,6 +1126,10 @@ iframe {
 		transform: translateY(0);
 	}
 
+	.site-nav--open ~ .menu-overlay {
+		display: block;
+	}
+
 	.menu-toggle {
 		display: inline-flex;
 	}
@@ -1040,6 +1143,7 @@ iframe {
 	.hero-section {
 		min-height: auto;
 		padding-top: 2rem;
+		overflow: hidden;
 	}
 
 	.hero-section__content {
@@ -1243,7 +1347,7 @@ iframe {
 
 	.site-footer__inner {
 		padding: 1.5rem 0;
-		gap: 1.5rem;
+		gap: 1rem;
 	}
 
 	.site-footer__bottom {
@@ -1285,7 +1389,7 @@ iframe {
 	}
 
 	.specialty-grid {
-		grid-template-columns: repeat(2, 1fr);
+		grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
 		gap: 0.6rem;
 	}
 
@@ -1313,8 +1417,8 @@ iframe {
 	}
 
 	.menu-toggle {
-		width: 42px;
-		height: 42px;
+		width: 48px;
+		height: 48px;
 	}
 
 	.site-nav {
@@ -1768,6 +1872,13 @@ iframe {
 	padding: 0.45rem 0.65rem;
 	margin-bottom: 0.4rem;
 	background: rgba(15, 134, 255, 0.04);
+	cursor: pointer;
+	user-select: none;
+}
+
+.admin-form__check--compact input[type="checkbox"] {
+	width: 1rem;
+	height: 1rem;
 }
 
 @media (max-width: 1120px) {
@@ -1801,6 +1912,10 @@ iframe {
 @media (max-width: 720px) {
 	.admin-shell {
 		padding: 0.75rem;
+	}
+
+	.admin-sidebar {
+		padding: 1rem;
 	}
 
 	.admin-content__summary,

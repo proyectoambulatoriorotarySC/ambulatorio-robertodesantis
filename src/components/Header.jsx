@@ -1,5 +1,5 @@
 import { NavLink, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 
 const navigationItems = [
   { label: "Inicio", to: "/" },
@@ -11,9 +11,23 @@ const navigationItems = [
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef(null);
+
+  useEffect(() => {
+    if (!menuOpen) return;
+
+    const handleClickOutside = (e) => {
+      if (headerRef.current && !headerRef.current.contains(e.target)) {
+        setMenuOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [menuOpen]);
 
   return (
-    <header className="site-header">
+    <header className="site-header" ref={headerRef}>
       <div className="site-header__inner">
         <Link className="brand" to="/">
           <img className="brand__mark" src="/logoRotary.png" alt="Logo Rotary Club" />
@@ -28,7 +42,7 @@ const Header = () => {
           className="menu-toggle"
           onClick={() => setMenuOpen((current) => !current)}
           aria-expanded={menuOpen}
-          aria-label="Abrir menú"
+          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
         >
           <span />
           <span />
