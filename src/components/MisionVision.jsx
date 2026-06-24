@@ -40,9 +40,16 @@ const MisionVision = () => {
           </div>
         </article>
 
-        <article className="mission-card mission-card--accent-gold">
+        <article
+          className="mission-card mission-card--interactive mission-card--accent-gold"
+          onClick={() => openModal("historia")}
+        >
           <strong>Historia</strong>
-          <p>{institutionalContent.historia}</p>
+          <p className="mission-card__preview">{institutionalContent.historia}</p>
+          <div className="mission-card__cta">
+            <span>Leer texto completo</span>
+            <ArrowRightCircle size={18} />
+          </div>
         </article>
 
       </div>
@@ -54,8 +61,8 @@ const MisionVision = () => {
               <X size={28} />
             </button>
             <div className="mission-modal__content">
-              <strong>{activeModal === "mision" ? "Nuestra Misión" : "Nuestra Visión"}</strong>
-              <p>{activeModal === "mision" ? institutionalContent.mision : institutionalContent.vision}</p>
+              <strong>{activeModal === "mision" ? "Nuestra Misión" : activeModal === "vision" ? "Nuestra Visión" : "Nuestra Historia"}</strong>
+              <p>{activeModal === "mision" ? institutionalContent.mision : activeModal === "vision" ? institutionalContent.vision : institutionalContent.historia}</p>
             </div>
           </div>
         </div>

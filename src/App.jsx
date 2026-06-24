@@ -6,6 +6,7 @@ import EspecialidadDetalle from "./pages/EspecialidadDetalle";
 import Directorio from "./pages/Directorio";
 import Servicios from "./pages/Servicios";
 import Nosotros from "./pages/Nosotros";
+import Galeria from "./pages/Galeria";
 import Login from "./pages/Login";
 import AdminDashboard from "./pages/AdminDashboard";
 import NotFound from "./pages/NotFound";
@@ -25,6 +26,7 @@ function App() {
           <Route path="/integrales" element={<Directorio />} />
           <Route path="/servicios" element={<Servicios />} />
           <Route path="/nosotros" element={<Nosotros />} />
+          <Route path="/galeria" element={<Galeria />} />
         </Route>
 
         <Route path="/login" element={user ? <Navigate to="/admin" replace /> : <Login />} />

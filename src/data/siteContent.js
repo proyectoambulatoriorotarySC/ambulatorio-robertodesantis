@@ -44,7 +44,35 @@ export const institutionalContent = {
   vision:
     "Ser líder regional en la prestación de servicios integrales de salud en el área preventiva y curativa, logrando la satisfacción de los usuarios, mediante una red de centros médicos, constituido por personal técnico y profesional capacitado, especializado y humano, con procesos de vanguardia que permitan mejor relación entre las comunidades y el movimiento rotario.",
   historia:
-    "El Ambulatorio Roberto De Santis nació como iniciativa comunitaria del Rotary Club para acercar servicios médicos confiables a la población local.",
+    `Esta obra fue construida y puesta en marcha gracias a la colaboración de innumerables entes y personas que creyeron en el "sueño" de servir más y mejor a la comunidad:
+
+Jhon Petty, Miembro del Rotary Club Long View - Texas USA.
+
+Lloyd Aviation C.A.
+
+ACBL de Venezuela.
+
+Golden Stivadores - Alabama USA.
+
+Venus Line. (Naviera)
+
+F. Stanzione. (Agente Aduanal)
+
+Ocean Mar.
+
+Marubeni.
+
+Sidunor.
+
+Comité de Apoyo Rotary Puerto Ordaz.
+
+Gobernación del Estado Bolívar (1998).
+
+Miembros del Rotary Puerto Ordaz.
+
+Y a todos aquellos que silenciosa y desinteresadamente han aportado tiempo y recursos a los programas y actividades rotarias.
+
+Puerto Ordaz, 1996-2001, Venezuela.`,
 };
 
 export const consultationPackages = [
@@ -360,8 +388,9 @@ export const defaultHomeHero = {
  */
 export const heroImages = [
   { src: '/rotary.jpg', alt: 'Ambulatorio Roberto De Santis - Fachada' },
-  { src: '/rotary.jpg', alt: 'Ambulatorio Roberto De Santis - Instalaciones' },
-  { src: '/rotary.jpg', alt: 'Ambulatorio Roberto De Santis - Equipo médico' },
+  { src: '/horarios.jpg', alt: 'Horarios de atención' },
+  { src: '/puertarotary.jpg', alt: 'Puerta Rotary' },
+  { src: '/vanerPublicitario.jpg', alt: 'Váner Publicitario' },
 ];
 
 export const makeFallbackSchedule = (name = "") => {

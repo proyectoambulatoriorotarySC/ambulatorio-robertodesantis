@@ -7,6 +7,7 @@ const navigationItems = [
   { label: "Directorio Médico", to: "/directorio" },
   { label: "Consultas Integrales", to: "/integrales" },
   { label: "Servicios", to: "/servicios" },
+  { label: "Galería", to: "/galeria" },
 ];
 
 const Header = () => {
@@ -30,10 +31,10 @@ const Header = () => {
     <header className="site-header" ref={headerRef}>
       <div className="site-header__inner">
         <Link className="brand" to="/">
-          <img className="brand__mark" src="/logoRotary.png" alt="Logo Rotary Club" />
+          <img className="brand__mark" src="/logoRotary.png" alt="Logo Fundación Rotary Puerto Ordaz" />
           <span className="brand__copy">
             <strong>Ambulatorio Roberto De Santis</strong>
-            <span>Rotary Club</span>
+            <span>Fundación Rotary Puerto Ordaz</span>
           </span>
         </Link>
 

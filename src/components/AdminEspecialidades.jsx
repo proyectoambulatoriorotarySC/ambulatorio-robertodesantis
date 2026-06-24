@@ -366,6 +366,8 @@ const AdminEspecialidades = () => {
               <select value={newDoctor.title} onChange={(e) => setNewDoctor(curr => ({ ...curr, title: e.target.value }))}>
                 <option value="Dr.">Dr.</option>
                 <option value="Dra.">Dra.</option>
+                <option value="Téc.">Téc.</option>
+                <option value="Lic.">Lic.</option>
               </select>
               <input value={newDoctor.firstName} onChange={(e) => setNewDoctor(curr => ({ ...curr, firstName: e.target.value }))} onKeyDown={handleDoctorKeyDown} placeholder="Nombre" />
               <input value={newDoctor.lastName} onChange={(e) => setNewDoctor(curr => ({ ...curr, lastName: e.target.value }))} onKeyDown={handleDoctorKeyDown} placeholder="Apellido" />
