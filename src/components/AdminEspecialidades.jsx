@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useEspecialidades } from "../hooks/useEspecialidades";
 import * as LucideIcons from "lucide-react";
 import { Tooth as CustomTooth } from "./CustomIcons";
@@ -19,7 +19,7 @@ const iconOptions = [
   { value: "Ambulance", label: "Ambulancia/Urgencias", Icon: LucideIcons.Ambulance },
   { value: "Brain", label: "Cerebro/Neurología", Icon: LucideIcons.Brain },
   { value: "BrainCircuit", label: "Psicología/Mente", Icon: LucideIcons.BrainCircuit },
-  { value: "Lungs", label: "Pulmones/Neumonología", Icon: LucideIcons.Lungs },
+  { value: "Lungs", label: "Pulmones/Neumonología", Icon: LucideIcons.Wind },
   { value: "Baby", label: "Bebé/Pediatría", Icon: LucideIcons.Baby },
   { value: "Bone", label: "Hueso/Ortopedia", Icon: LucideIcons.Bone },
   { value: "Eye", label: "Ojo/Oftalmología", Icon: LucideIcons.Eye },
@@ -108,25 +108,39 @@ const AdminEspecialidades = () => {
   const [newDoctor, setNewDoctor] = useState({ title: "Dr.", firstName: "", lastName: "" });
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  useEffect(() => {
-    if (!especialidades.length || isCreatingNew) {
-      return;
+  const [prevEspecialidades, setPrevEspecialidades] = useState(null);
+  const [prevSelectedId, setPrevSelectedId] = useState(null);
+  const [prevIsCreatingNew, setPrevIsCreatingNew] = useState(null);
+
+  if (
+    especialidades !== prevEspecialidades ||
+    selectedId !== prevSelectedId ||
+    isCreatingNew !== prevIsCreatingNew
+  ) {
+    setPrevEspecialidades(especialidades);
+    setPrevSelectedId(selectedId);
+    setPrevIsCreatingNew(isCreatingNew);
+
+    if (especialidades.length && !isCreatingNew) {
+      const item = especialidades.find((entry) => entry.id === selectedId) || especialidades[0];
+      if (item) {
+        if (selectedId !== item.id) {
+          setSelectedId(item.id);
+        }
+        setFormState({
+          id: item.id || "",
+          nombre: item.nombre || "",
+          icon: item.icon || "",
+          medicos: item.medicos || [],
+          textoHorarioPlano: item.textoHorarioPlano || "",
+          estudioIncluido: item.estudioIncluido || "",
+          cronograma: buildScheduleFromData(item),
+        });
+      }
     }
-
-    const item = especialidades.find((entry) => entry.id === selectedId) || especialidades[0];
-
-    setSelectedId(item.id);
-    setFormState({
-      id: item.id || "",
-      nombre: item.nombre || "",
-      icon: item.icon || "",
-      medicos: item.medicos || [],
-      textoHorarioPlano: item.textoHorarioPlano || "",
-      estudioIncluido: item.estudioIncluido || "",
-      cronograma: buildScheduleFromData(item),
-    });
-  }, [especialidades, selectedId, isCreatingNew]);
+  }
 
   const handleSelect = (id) => {
     setIsCreatingNew(false);
@@ -268,9 +282,13 @@ const AdminEspecialidades = () => {
     }
   };
 
-  const deleteCurrent = async () => {
+  const deleteCurrent = () => {
     if (!selectedId) return;
-    if (!window.confirm(`¿Estás seguro de eliminar "${formState.nombre}"? Esta acción no se puede deshacer.`)) return;
+    setIsDeleteModalOpen(true);
+  };
+
+  const confirmDelete = async () => {
+    setIsDeleteModalOpen(false);
     try {
       await deleteEspecialidad(selectedId);
       setStatus({ type: "success", message: "Especialidad eliminada." });
@@ -368,6 +386,7 @@ const AdminEspecialidades = () => {
                 <option value="Dra.">Dra.</option>
                 <option value="Téc.">Téc.</option>
                 <option value="Lic.">Lic.</option>
+                <option value="Ing.">Ing.</option>
               </select>
               <input value={newDoctor.firstName} onChange={(e) => setNewDoctor(curr => ({ ...curr, firstName: e.target.value }))} onKeyDown={handleDoctorKeyDown} placeholder="Nombre" />
               <input value={newDoctor.lastName} onChange={(e) => setNewDoctor(curr => ({ ...curr, lastName: e.target.value }))} onKeyDown={handleDoctorKeyDown} placeholder="Apellido" />
@@ -420,6 +439,36 @@ const AdminEspecialidades = () => {
           )}
         </form>
       </div>
+
+      {isDeleteModalOpen && (
+        <div className="admin-modal-overlay" onClick={() => setIsDeleteModalOpen(false)}>
+          <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
+            <div className="admin-modal__icon admin-modal__icon--danger">
+              <LucideIcons.AlertTriangle size={32} />
+            </div>
+            <h3>¿Eliminar especialidad?</h3>
+            <p>
+              ¿Estás seguro de eliminar <strong>"{formState.nombre}"</strong>? Esta acción eliminará permanentemente la especialidad y a todos sus médicos asociados del directorio médico. Esta acción no se puede deshacer.
+            </p>
+            <div className="admin-modal__actions">
+              <button
+                type="button"
+                className="button button--secondary"
+                onClick={() => setIsDeleteModalOpen(false)}
+              >
+                Cancelar
+              </button>
+              <button
+                type="button"
+                className="button button--danger"
+                onClick={confirmDelete}
+              >
+                Sí, eliminar
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </section>
   );
 };

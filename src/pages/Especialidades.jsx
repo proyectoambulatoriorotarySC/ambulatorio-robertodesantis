@@ -1,6 +1,5 @@
 ﻿import { useMemo, useState } from "react";
 import { useEspecialidades } from "../hooks/useEspecialidades";
-import { makeFallbackSchedule, specialtyCatalog } from "../data/siteContent";
 import Buscador from "../components/Buscador";
 import ListaEspecialidades from "../components/ListaEspecialidades";
 import LoadingSpinner from "../components/LoadingSpinner";
@@ -56,7 +55,6 @@ const Especialidades = () => {
 
         <div className="specialty-summary">
           <span>{filteredSpecialities.length} resultados</span>
-          <span>Actualización en tiempo real desde la base de datos</span>
         </div>
 
         <ListaEspecialidades especialidades={filteredSpecialities} searchTerm={searchTerm} />

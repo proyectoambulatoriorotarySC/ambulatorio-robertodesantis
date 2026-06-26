@@ -1,5 +1,3 @@
-import React from "react";
-
 export const Tooth = ({ size = 24, ...props }) => (
   <svg
     xmlns="http://www.w3.org/2000/svg"

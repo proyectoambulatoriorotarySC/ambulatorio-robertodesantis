@@ -1,4 +1,4 @@
-﻿import { Link } from "react-router-dom";
+import { Link } from "react-router-dom";
 import * as Icons from "lucide-react";
 import { Tooth as CustomTooth } from "./CustomIcons";
 
@@ -25,7 +25,7 @@ const iconComponents = {
   Heart: Icons.Heart,
   HeartPulse: Icons.HeartPulse,
   Hospital: Icons.Hospital,
-  Lungs: Icons.Lungs,
+  Lungs: Icons.Wind,
   MessageCircle: Icons.MessageCircle,
   Microscope: Icons.Microscope,
   Pill: Icons.Pill,

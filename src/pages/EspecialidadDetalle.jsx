@@ -1,7 +1,6 @@
-﻿import { useParams, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useMemo } from "react";
 import { useEspecialidades } from "../hooks/useEspecialidades";
-import { specialtyCatalog } from "../data/siteContent";
 import * as Icons from "lucide-react";
 import { Tooth as CustomTooth } from "../components/CustomIcons";
 import HorarioEspecialidad from "../components/HorarioEspecialidad";
@@ -30,7 +29,7 @@ const iconComponents = {
   Heart: Icons.Heart,
   HeartPulse: Icons.HeartPulse,
   Hospital: Icons.Hospital,
-  Lungs: Icons.Lungs,
+  Lungs: Icons.Wind,
   MessageCircle: Icons.MessageCircle,
   Microscope: Icons.Microscope,
   Pill: Icons.Pill,

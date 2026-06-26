@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { useConfiguracion } from "../hooks/useConfiguracion";
 import { consultationPackages } from "../data/siteContent";
 
@@ -17,20 +17,36 @@ const AdminConsultas = () => {
 
   const sourceItems = useMemo(() => configuracion?.consultasIntegrales || consultationPackages, [configuracion]);
 
-  useEffect(() => {
+  const [prevSourceItems, setPrevSourceItems] = useState(null);
+  const [prevItems, setPrevItems] = useState(null);
+  const [prevEditingIndex, setPrevEditingIndex] = useState(null);
+
+  let currentItems = items;
+
+  if (sourceItems !== prevSourceItems) {
+    setPrevSourceItems(sourceItems);
     setItems(sourceItems);
-  }, [sourceItems]);
+    currentItems = sourceItems;
+  }
 
-  useEffect(() => {
-    if (!items.length) {
-      setEditingIndex(0);
+  if (currentItems !== prevItems || editingIndex !== prevEditingIndex) {
+    setPrevItems(currentItems);
+    setPrevEditingIndex(editingIndex);
+
+    if (!currentItems.length) {
+      if (editingIndex !== 0) {
+        setEditingIndex(0);
+      }
       setFormState(emptyPackage);
-      return;
+    } else {
+      const targetIndex = Math.min(editingIndex, currentItems.length - 1);
+      if (editingIndex !== targetIndex) {
+        setEditingIndex(targetIndex);
+      }
+      const current = currentItems[targetIndex];
+      setFormState(current || emptyPackage);
     }
-
-    const current = items[Math.min(editingIndex, items.length - 1)];
-    setFormState(current || emptyPackage);
-  }, [items, editingIndex]);
+  }
 
   const handleChange = (event) => {
     const { name, value } = event.target;

@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useConfiguracion } from "../hooks/useConfiguracion";
 
 const defaultState = {
@@ -19,22 +19,23 @@ const AdminAlertas = () => {
   const [saving, setSaving] = useState(false);
   const [status, setStatus] = useState({ type: "", message: "" });
 
-  useEffect(() => {
-    if (!configuracion) {
-      return;
-    }
+  const [prevConfiguracion, setPrevConfiguracion] = useState(null);
 
-    setFormState({
-      avisoActivo: Boolean(configuracion.avisoActivo),
-      textoAviso: configuracion.textoAviso || "",
-      telefonoContacto: configuracion.telefonoContacto || "",
-      whatsappContacto: configuracion.whatsappContacto || "",
-      mensajePredefinido: configuracion.mensajePredefinido || "Hola, quisiera solicitar información sobre las consultas.",
-      horarioGeneral: configuracion.horarioGeneral || "",
-      direccionFisica: configuracion.direccionFisica || "",
-      serviciosAdicionales: configuracion.serviciosAdicionales || [],
-    });
-  }, [configuracion]);
+  if (configuracion !== prevConfiguracion) {
+    setPrevConfiguracion(configuracion);
+    if (configuracion) {
+      setFormState({
+        avisoActivo: Boolean(configuracion.avisoActivo),
+        textoAviso: configuracion.textoAviso || "",
+        telefonoContacto: configuracion.telefonoContacto || "",
+        whatsappContacto: configuracion.whatsappContacto || "",
+        mensajePredefinido: configuracion.mensajePredefinido || "Hola, quisiera solicitar información sobre las consultas.",
+        horarioGeneral: configuracion.horarioGeneral || "",
+        direccionFisica: configuracion.direccionFisica || "",
+        serviciosAdicionales: configuracion.serviciosAdicionales || [],
+      });
+    }
+  }
 
   const handleChange = (event) => {
     const { name, value, type, checked } = event.target;
