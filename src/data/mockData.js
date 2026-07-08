@@ -9,6 +9,8 @@ export const mockConfiguracionGlobal = {
   avisoActivo: true,
   textoAviso: "Jornada de vacunación pediátrica este viernes 15. / El Dr. Pérez no pasará consulta esta tarde.",
   telefonoContacto: "0414-191-5455",
+  whatsappContacto: "584141915455",
+  instagramContacto: "@rotarypuertoodaz",
   horarioGeneral: "De lunes a viernes (7:30am-3:00pm)",
   direccionFisica: "Av. Norte Sur 4 Parcela 296-14-01 Ventuari. Cerca de la intersección con la Av. Atlántico.",
   consultasIntegrales: [

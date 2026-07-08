@@ -387,10 +387,15 @@ export const defaultHomeHero = {
  * Reemplázalas cuando tengas las fotos reales del rotary.
  */
 export const heroImages = [
-  { src: '/rotary.jpg', alt: 'Ambulatorio Roberto De Santis - Fachada' },
-  { src: '/horarios.jpg', alt: 'Horarios de atención' },
-  { src: '/puertarotary.jpg', alt: 'Puerta Rotary' },
+  { src: '/rotarydoctores.jpeg', alt: 'Ambulatorio Roberto De Santis - Fachada' },
+  { src: '/rotary.jpg', alt: 'Horarios de atención' },
+  { src: '/entradarotary.jpeg', alt: 'Puerta Rotary' },
   { src: '/vanerPublicitario.jpg', alt: 'Váner Publicitario' },
+];
+
+export const galleryImages = [
+  ...heroImages,
+  { src: '/rotarydoctoresafuera.jpeg', alt: 'Ambulatorio Roberto De Santis - Personal Médico' },
 ];
 
 export const makeFallbackSchedule = (name = "") => {

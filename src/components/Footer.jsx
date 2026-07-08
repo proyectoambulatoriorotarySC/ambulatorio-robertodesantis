@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useConfiguracion } from "../hooks/useConfiguracion";
 import { mockConfiguracionGlobal } from "../data/mockData";
+import { WhatsApp, Instagram } from "./CustomIcons";
 
 const Footer = () => {
   const { configuracion } = useConfiguracion();
@@ -26,13 +27,26 @@ const Footer = () => {
           <a 
             href={contactHref} 
             className="site-footer__link" 
+            style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
             target={whatsappNumber ? "_blank" : "_self"}
             rel="noopener noreferrer"
           >
-            {footerData.telefonoContacto}
-            {whatsappNumber && <span style={{marginLeft: '0.5rem', fontSize: '0.8em'}}>(WhatsApp)</span>}
+            <WhatsApp size={18} style={{ color: "#25D366" }} />
+            <span>{footerData.telefonoContacto}</span>
           </a>
-          <p className="site-footer__text">{footerData.horarioGeneral}</p>
+          {footerData.instagramContacto && (
+            <a 
+              href={`https://instagram.com/${footerData.instagramContacto.replace("@", "")}`}
+              className="site-footer__link" 
+              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <Instagram size={18} style={{ stroke: "#E1306C" }} />
+              <span>{footerData.instagramContacto}</span>
+            </a>
+          )}
+          <p className="site-footer__text" style={{ marginTop: "0.5rem" }}>{footerData.horarioGeneral}</p>
         </div>
 
         <div>

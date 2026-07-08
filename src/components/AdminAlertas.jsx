@@ -6,6 +6,7 @@ const defaultState = {
   textoAviso: "",
   telefonoContacto: "",
   whatsappContacto: "",
+  instagramContacto: "",
   mensajePredefinido: "",
   horarioGeneral: "",
   direccionFisica: "",
@@ -29,6 +30,7 @@ const AdminAlertas = () => {
         textoAviso: configuracion.textoAviso || "",
         telefonoContacto: configuracion.telefonoContacto || "",
         whatsappContacto: configuracion.whatsappContacto || "",
+        instagramContacto: configuracion.instagramContacto || "",
         mensajePredefinido: configuracion.mensajePredefinido || "Hola, quisiera solicitar información sobre las consultas.",
         horarioGeneral: configuracion.horarioGeneral || "",
         direccionFisica: configuracion.direccionFisica || "",
@@ -114,6 +116,11 @@ const AdminAlertas = () => {
           Número de WhatsApp (Solo números)
           <input name="whatsappContacto" value={formState.whatsappContacto} onChange={handleChange} placeholder="Ej: 584141915455" />
           <span className="admin-form__hint" style={{fontSize: '0.75rem', fontWeight: 'normal'}}>Incluye código de país sin el signo + (Ej: 58 para Venezuela).</span>
+        </label>
+
+        <label>
+          Instagram (Usuario con o sin @)
+          <input name="instagramContacto" value={formState.instagramContacto} onChange={handleChange} placeholder="Ej: @rotarypuertoodaz" />
         </label>
 
         <label style={{ gridColumn: "1 / -1" }}>

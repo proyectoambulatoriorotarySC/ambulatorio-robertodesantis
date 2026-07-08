@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { heroImages } from "../data/siteContent";
+import { galleryImages } from "../data/siteContent";
 
 const Galeria = () => {
   const [selected, setSelected] = useState(null);
@@ -13,7 +13,7 @@ const Galeria = () => {
       </div>
 
       <div className="gallery-grid">
-        {heroImages.map((img, i) => (
+        {galleryImages.map((img, i) => (
           <button
             key={i}
             type="button"
@@ -35,7 +35,7 @@ const Galeria = () => {
             >
               ×
             </button>
-            <img src={heroImages[selected].src} alt={heroImages[selected].alt} />
+            <img src={galleryImages[selected].src} alt={galleryImages[selected].alt} />
           </div>
         </div>
       )}
