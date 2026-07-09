@@ -1,6 +1,8 @@
 import { mockConfiguracionGlobal } from "../data/mockData";
+import { useReveal } from "../hooks/useReveal";
 
 const MapaUbicacion = ({ configuracion }) => {
+  const { ref: sectionRef, isVisible } = useReveal();
   const data = configuracion ?? mockConfiguracionGlobal;
   const whatsappNumber = data.whatsappContacto?.replace(/[^0-9]/g, "");
   const encodedMessage = encodeURIComponent(data.mensajePredefinido || "Hola, quisiera solicitar información.");
@@ -9,7 +11,7 @@ const MapaUbicacion = ({ configuracion }) => {
     : `tel:${data.telefonoContacto?.replace(/[^0-9]/g, "")}`;
 
   return (
-    <section className="contact-section content-section" id="ubicacion">
+    <section className={`contact-section content-section reveal ${isVisible ? "reveal--visible" : ""}`} id="ubicacion" ref={sectionRef}>
       <div className="contact-section__copy">
         <span className="section-kicker section-kicker--gold">Ubicación y Contacto</span>
         <h2>Consulta de Disponibilidad</h2>

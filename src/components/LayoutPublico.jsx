@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import AvisoBanner from "./AvisoBanner";
 import Header from "./Header";
 import Footer from "./Footer";
+import ScrollToTop from "./ScrollToTop";
 
 const LayoutPublico = () => {
   const { pathname } = useLocation();
@@ -19,6 +20,7 @@ const LayoutPublico = () => {
         <Outlet />
       </main>
       <Footer />
+      <ScrollToTop />
     </div>
   );
 };

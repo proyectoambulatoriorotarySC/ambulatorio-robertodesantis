@@ -54,7 +54,7 @@ const normalizeValue = (value = "") =>
     .toLowerCase()
     .trim();
 
-const TarjetaEspecialidad = ({ especialidad, isActive, searchTerm }) => {
+const TarjetaEspecialidad = ({ especialidad, isActive, searchTerm, index = 0 }) => {
   const IconComponent = iconComponents[especialidad.icon] || Icons.Stethoscope;
 
   const matchingDoctors = searchTerm
@@ -66,7 +66,8 @@ const TarjetaEspecialidad = ({ especialidad, isActive, searchTerm }) => {
   return (
     <Link
       to={`/directorio/${especialidad.id}`}
-      className={`specialty-card specialty-card--accent-${especialidad.accent || "blue"} ${isActive ? "specialty-card--active" : ""}`}
+      className={`stagger-card specialty-card specialty-card--accent-${especialidad.accent || "blue"} ${isActive ? "specialty-card--active" : ""}`}
+      style={{ "--i": index }}
     >
       <span className={`specialty-card__icon specialty-card__icon--${especialidad.accent || "blue"}`} aria-hidden="true">
         <IconComponent size={28} />

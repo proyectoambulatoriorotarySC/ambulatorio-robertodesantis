@@ -5,14 +5,12 @@ const AvisoBanner = () => {
   const { configuracion } = useConfiguracion();
   const aviso = configuracion ?? mockConfiguracionGlobal;
 
-  if (!aviso?.avisoActivo || !aviso?.textoAviso) {
-    return null;
-  }
+  const isActive = aviso?.avisoActivo && aviso?.textoAviso;
 
   return (
-    <div className="aviso-banner" role="status" aria-live="polite">
+    <div className={`aviso-banner ${isActive ? "" : "aviso-banner--hidden"}`} role="status" aria-live="polite">
       <span className="aviso-banner__tag">AVISO</span>
-      <p>{aviso.textoAviso}</p>
+      <p>{aviso.textoAviso || ""}</p>
     </div>
   );
 };

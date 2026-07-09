@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { institutionalContent } from "../data/siteContent";
 import { X, ArrowRightCircle } from "lucide-react";
+import { useReveal } from "../hooks/useReveal";
 
 const MisionVision = () => {
   const [activeModal, setActiveModal] = useState(null);
+  const { ref: sectionRef, isVisible } = useReveal();
   const openModal = (type) => setActiveModal(type);
   const closeModal = () => setActiveModal(null);
 
   return (
-    <section className="content-section" id="nosotros">
+    <section className={`content-section reveal ${isVisible ? "reveal--visible" : ""}`} id="nosotros" ref={sectionRef}>
       <div className="section-heading">
         <span className="section-kicker section-kicker--neutral">Nuestra Institución</span>
         <h2>Misión, Visión e Historia</h2>
@@ -17,7 +19,8 @@ const MisionVision = () => {
 
       <div className="mission-grid">
         <article 
-          className="mission-card mission-card--interactive mission-card--accent-blue" 
+          className="stagger-card mission-card mission-card--interactive mission-card--accent-blue" 
+          style={{ "--i": 0 }}
           onClick={() => openModal("mision")}
         >
           <strong>Misión</strong>
@@ -29,7 +32,8 @@ const MisionVision = () => {
         </article>
 
         <article 
-          className="mission-card mission-card--interactive mission-card--accent-teal" 
+          className="stagger-card mission-card mission-card--interactive mission-card--accent-teal" 
+          style={{ "--i": 1 }}
           onClick={() => openModal("vision")}
         >
           <strong>Visión</strong>
@@ -41,7 +45,8 @@ const MisionVision = () => {
         </article>
 
         <article
-          className="mission-card mission-card--interactive mission-card--accent-gold"
+          className="stagger-card mission-card mission-card--interactive mission-card--accent-gold"
+          style={{ "--i": 2 }}
           onClick={() => openModal("historia")}
         >
           <strong>Historia</strong>

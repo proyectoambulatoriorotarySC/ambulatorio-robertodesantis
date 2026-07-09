@@ -1,5 +1,5 @@
 import { NavLink, Link } from "react-router-dom";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 
 const navigationItems = [
   { label: "Inicio", to: "/" },
@@ -12,6 +12,7 @@ const navigationItems = [
 
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
+  const [compact, setCompact] = useState(false);
   const headerRef = useRef(null);
 
   useEffect(() => {
@@ -27,8 +28,18 @@ const Header = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [menuOpen]);
 
+  const handleScroll = useCallback(() => {
+    setCompact(window.scrollY > 80);
+  }, []);
+
+  useEffect(() => {
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [handleScroll]);
+
   return (
-    <header className="site-header" ref={headerRef}>
+    <header className={`site-header ${compact ? "site-header--compact" : ""}`} ref={headerRef}>
       <div className="site-header__inner">
         <Link className="brand" to="/">
           <img className="brand__mark" src="/logoRotary.png" alt="Logo Fundación Rotary Puerto Ordaz" />
@@ -40,7 +51,7 @@ const Header = () => {
 
         <button
           type="button"
-          className="menu-toggle"
+          className={`menu-toggle ${menuOpen ? "menu-toggle--open" : ""}`}
           onClick={() => setMenuOpen((current) => !current)}
           aria-expanded={menuOpen}
           aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}

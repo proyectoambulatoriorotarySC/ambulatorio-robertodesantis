@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { galleryImages } from "../data/siteContent";
+import { useReveal } from "../hooks/useReveal";
 
 const Galeria = () => {
   const [selected, setSelected] = useState(null);
+  const { ref: sectionRef, isVisible } = useReveal();
 
   return (
-    <section className="content-section">
+    <section className={`content-section reveal ${isVisible ? "reveal--visible" : ""}`} ref={sectionRef}>
       <div className="section-heading">
         <span className="section-kicker">Galería</span>
         <h2>Fotos del Rotary</h2>
@@ -17,7 +19,8 @@ const Galeria = () => {
           <button
             key={i}
             type="button"
-            className="gallery-card"
+            className="stagger-card gallery-card"
+            style={{ "--i": i }}
             onClick={() => setSelected(i)}
           >
             <img src={img.src} alt={img.alt} />
