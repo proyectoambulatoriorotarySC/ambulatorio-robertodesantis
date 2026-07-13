@@ -11,7 +11,7 @@ const Galeria = () => {
       <div className="section-heading">
         <span className="section-kicker">Galería</span>
         <h2>Fotos del Rotary</h2>
-        <p>Conoce nuestras instalaciones y servicios</p>
+        <p>Conoce nuestras instalaciones</p>
       </div>
 
       <div className="gallery-grid">
