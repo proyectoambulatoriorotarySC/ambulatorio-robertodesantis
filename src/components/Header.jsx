@@ -39,37 +39,43 @@ const Header = () => {
   }, [handleScroll]);
 
   return (
-    <header className={`site-header ${compact ? "site-header--compact" : ""}`} ref={headerRef}>
-      <div className="site-header__inner">
-        <Link className="brand" to="/">
-          <img className="brand__mark" src="/logoRotary.png" alt="Logo Fundación Rotary Puerto Ordaz" />
-          <span className="brand__copy">
-            <strong>Ambulatorio Roberto De Santis</strong>
-            <span>Fundación Rotary Puerto Ordaz</span>
-          </span>
-        </Link>
+    <>
+      <header className={`site-header ${compact ? "site-header--compact" : ""}`} ref={headerRef}>
+        <div className="site-header__inner">
+          <Link className="brand" to="/">
+            <img className="brand__mark" src="/logoRotary.png" alt="Logo Fundación Rotary Puerto Ordaz" />
+            <span className="brand__copy">
+              <strong>Ambulatorio Roberto De Santis</strong>
+              <span>Fundación Rotary Puerto Ordaz</span>
+            </span>
+          </Link>
 
-        <button
-          type="button"
-          className={`menu-toggle ${menuOpen ? "menu-toggle--open" : ""}`}
-          onClick={() => setMenuOpen((current) => !current)}
-          aria-expanded={menuOpen}
-          aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
-        >
-          <span />
-          <span />
-          <span />
-        </button>
+          <button
+            type="button"
+            className={`menu-toggle ${menuOpen ? "menu-toggle--open" : ""}`}
+            onClick={() => setMenuOpen((current) => !current)}
+            aria-expanded={menuOpen}
+            aria-label={menuOpen ? "Cerrar menú" : "Abrir menú"}
+          >
+            <span />
+            <span />
+            <span />
+          </button>
 
-        <nav className={`site-nav ${menuOpen ? "site-nav--open" : ""}`}>
-          {navigationItems.map((item) => (
-            <NavLink key={item.label} to={item.to} onClick={() => setMenuOpen(false)} end={item.to === "/"}>
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-      </div>
-    </header>
+          <nav className={`site-nav ${menuOpen ? "site-nav--open" : ""}`}>
+            {navigationItems.map((item) => (
+              <NavLink key={item.label} to={item.to} onClick={() => setMenuOpen(false)} end={item.to === "/"}>
+                {item.label}
+              </NavLink>
+            ))}
+          </nav>
+        </div>
+      </header>
+      <div
+        className={`menu-overlay ${menuOpen ? "menu-overlay--open" : ""}`}
+        onClick={() => setMenuOpen(false)}
+      />
+    </>
   );
 };
 

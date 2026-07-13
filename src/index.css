@@ -228,17 +228,31 @@ iframe {
 .menu-toggle {
 	display: none;
 	flex-direction: column;
-	gap: 0.28rem;
-	width: 48px;
-	height: 48px;
+	justify-content: center;
+	align-items: center;
+	gap: 5px;
+	width: 44px;
+	height: 44px;
 	padding: 0;
 	border: 0;
-	background: transparent;
+	background: rgba(14, 53, 94, 0.03);
+	border-radius: 50%;
+	cursor: pointer;
+	transition: background-color 0.2s ease, transform 0.2s ease;
+}
+
+.menu-toggle:hover {
+	background: rgba(14, 53, 94, 0.08);
+}
+
+.menu-toggle:active {
+	transform: scale(0.95);
 }
 
 .menu-toggle span {
-	width: 100%;
-	height: 3px;
+	display: block;
+	width: 20px;
+	height: 2px;
 	border-radius: 999px;
 	background: var(--ink);
 }
@@ -1146,29 +1160,49 @@ iframe {
 		top: 100%;
 		right: 1rem;
 		left: 1rem;
-		padding: 1rem;
+		padding: 1.25rem 1rem;
 		flex-direction: column;
 		align-items: stretch;
-		gap: 0.9rem;
-		background: #fff;
-		border: 1px solid rgba(14, 53, 94, 0.08);
-		border-radius: 20px;
-		box-shadow: var(--shadow);
+		gap: 0.5rem;
+		background: rgba(255, 255, 255, 0.88);
+		backdrop-filter: blur(20px);
+		-webkit-backdrop-filter: blur(20px);
+		border: 1px solid rgba(255, 255, 255, 0.55);
+		border-radius: 24px;
+		box-shadow: 0 20px 48px rgba(14, 53, 94, 0.16);
 		opacity: 0;
 		pointer-events: none;
-		transform: translateY(-8px);
-		transition: opacity 200ms ease, transform 200ms ease;
+		transform: translateY(-16px) scale(0.96);
+		transition: opacity 250ms cubic-bezier(0.16, 1, 0.3, 1), transform 250ms cubic-bezier(0.16, 1, 0.3, 1);
 		z-index: 70;
 	}
 
 	.site-nav--open {
 		opacity: 1;
 		pointer-events: auto;
-		transform: translateY(0);
+		transform: translateY(0) scale(1);
 	}
 
-	.site-nav--open ~ .menu-overlay {
-		display: block;
+	.site-nav a {
+		padding: 0.85rem 1.25rem;
+		border-radius: 14px;
+		color: var(--ink);
+		opacity: 0.9;
+		font-size: 1rem;
+		font-weight: 700;
+		transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+		display: flex;
+		align-items: center;
+		width: 100%;
+		background: transparent;
+	}
+
+	.site-nav a:hover,
+	.site-nav a.active {
+		background: rgba(11, 115, 232, 0.08);
+		color: var(--primary-dark);
+		opacity: 1;
+		transform: translateX(6px);
 	}
 
 	.menu-toggle {
@@ -1356,15 +1390,19 @@ iframe {
 		flex-direction: column;
 		border-radius: 24px;
 		padding: 0.7rem;
+		gap: 0.6rem;
 	}
 
 	.search-panel__field input {
-		padding: 0.25rem 0.75rem 0;
+		padding: 0.75rem 1.1rem;
 		width: 100%;
+		min-height: 48px;
+		text-align: center;
 	}
 
 	.search-panel__field button {
 		width: 100%;
+		min-height: 48px;
 	}
 
 	.schedule-panel__header {
@@ -2351,16 +2389,16 @@ iframe {
 }
 
 .menu-toggle--open span:nth-child(1) {
-  transform: translateY(10px) rotate(45deg);
+  transform: translateY(7px) rotate(45deg);
 }
 
 .menu-toggle--open span:nth-child(2) {
   opacity: 0;
-  transform: scaleX(0);
+  transform: scale(0);
 }
 
 .menu-toggle--open span:nth-child(3) {
-  transform: translateY(-10px) rotate(-45deg);
+  transform: translateY(-7px) rotate(-45deg);
 }
 
 /* ══════════════════════════════════════════════
@@ -2468,4 +2506,73 @@ iframe {
   border-color: rgba(15, 134, 255, 0.25);
   transform: translateX(3px);
   box-shadow: 0 8px 20px rgba(15, 134, 255, 0.1);
+}
+
+/* ══════════════════════════════════════════════
+   IMPROVEMENT: Mobile UX and Tactical Enhancements
+   ══════════════════════════════════════════════ */
+
+/* 1. Menu Backdrop Dim & Blur Overlay */
+.menu-overlay {
+	position: fixed;
+	inset: 0;
+	z-index: 55;
+	background: rgba(14, 53, 94, 0.35);
+	backdrop-filter: blur(4px);
+	-webkit-backdrop-filter: blur(4px);
+	opacity: 0;
+	pointer-events: none;
+	transition: opacity 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.menu-overlay--open {
+	opacity: 1;
+	pointer-events: auto;
+}
+
+/* 2. Global Input Focus Glow & Transitions */
+input,
+textarea,
+select {
+	transition: border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+input:focus,
+textarea:focus,
+select:focus {
+	outline: none;
+	border-color: var(--primary) !important;
+	box-shadow: 0 0 0 4px rgba(15, 134, 255, 0.14) !important;
+}
+
+/* 3. Tactile Scale/Active Feedback for Mobile (Tap targets) */
+@media (hover: none) {
+	.button:active,
+	.specialty-card:active,
+	.hero-carousel__dot:active,
+	.admin-sidebar__item:active,
+	.admin-list__item:active {
+		transform: scale(0.96) !important;
+		transition: transform 0.1s ease !important;
+	}
+}
+
+/* 4. Vertical Stacking of Detail Header on Small Screens to prevent layout breaks */
+@media (max-width: 480px) {
+	.detail-card__header {
+		flex-direction: column;
+		text-align: center;
+		gap: 0.85rem;
+		align-items: center;
+		padding-bottom: 0.5rem;
+	}
+
+	.detail-card__header h2 {
+		font-size: 1.8rem;
+		margin-top: 0.5rem;
+	}
+
+	.detail-card__header .specialty-card__icon {
+		margin: 0 auto;
+	}
 }
