@@ -10,9 +10,14 @@ const navigationItems = [
   { label: "Galería", to: "/galeria" },
 ];
 
+const COMPACT_THRESHOLD = 80;
+const EXPAND_THRESHOLD = 30;
+
 const Header = () => {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [compact, setCompact] = useState(false);
+  const [compact, setCompact] = useState(
+    () => typeof window !== "undefined" && window.scrollY > COMPACT_THRESHOLD
+  );
   const headerRef = useRef(null);
 
   useEffect(() => {
@@ -29,12 +34,15 @@ const Header = () => {
   }, [menuOpen]);
 
   const handleScroll = useCallback(() => {
-    setCompact(window.scrollY > 80);
+    setCompact((prev) => {
+      if (prev && window.scrollY <= EXPAND_THRESHOLD) return false;
+      if (!prev && window.scrollY > COMPACT_THRESHOLD) return true;
+      return prev;
+    });
   }, []);
 
   useEffect(() => {
     window.addEventListener("scroll", handleScroll, { passive: true });
-    handleScroll();
     return () => window.removeEventListener("scroll", handleScroll);
   }, [handleScroll]);
 
