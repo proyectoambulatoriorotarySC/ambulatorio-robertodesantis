@@ -2213,24 +2213,30 @@ iframe {
 
 .gallery-overlay__close {
   position: absolute;
-  top: 1rem;
-  right: 1rem;
+  top: 0.75rem;
+  right: 0.75rem;
   border: 0;
-  background: rgba(255, 255, 255, 0.15);
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(6px);
   color: #fff;
-  width: 48px;
-  height: 48px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   display: grid;
   place-items: center;
-  font-size: 1.8rem;
   cursor: pointer;
   transition: background 0.2s ease;
-  z-index: 1;
+  z-index: 2;
 }
 
-.gallery-overlay__close:hover {
-  background: rgba(255, 255, 255, 0.3);
+.gallery-overlay__close:hover,
+.gallery-overlay__close:focus-visible {
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.gallery-overlay__close:focus-visible {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
 }
 
 @keyframes fadeIn {
