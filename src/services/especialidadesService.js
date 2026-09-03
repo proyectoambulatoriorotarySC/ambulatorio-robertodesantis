@@ -1,4 +1,4 @@
-﻿// src/services/especialidadesService.js
+// src/services/especialidadesService.js
 import { auth, db } from "./firebase";
 import {
   collection,
@@ -79,7 +79,7 @@ export const especialidadesService = {
         accion: "CREAR",
         entidad: "especialidades",
         entidadId: id,
-        detalle: "Se creó la especialidad " + payload.nombre || id,
+        detalle: "Se creó la especialidad " + (payload.nombre || id),
       });
       return { id, ...payload };
     } catch (error) {
@@ -97,7 +97,7 @@ export const especialidadesService = {
         accion: "ACTUALIZAR",
         entidad: "especialidades",
         entidadId: id,
-        detalle: "Se actualizó la especialidad " + payload.nombre || id,
+        detalle: "Se actualizó la especialidad " + (payload.nombre || id),
       });
       return { id, ...payload };
     } catch (error) {
