@@ -4,9 +4,10 @@ import { useAuth } from "../hooks/useAuth";
 import { authService } from "../services/authService";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import LoadingSpinner from "../components/LoadingSpinner";
 
 const Login = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
   const [email, setEmail] = useState("");
@@ -17,10 +18,18 @@ const Login = () => {
   const redirectTo = location.state?.from?.pathname || "/admin";
 
   useEffect(() => {
-    if (user) {
+    if (!loading && user) {
       navigate(redirectTo, { replace: true });
     }
-  }, [navigate, redirectTo, user]);
+  }, [loading, navigate, redirectTo, user]);
+
+  if (loading) {
+    return (
+      <main className="route-loading">
+        <LoadingSpinner message="Verificando sesión..." />
+      </main>
+    );
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();

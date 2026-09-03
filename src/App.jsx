@@ -1,42 +1,50 @@
-﻿import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LayoutPublico from "./components/LayoutPublico";
 import Home from "./pages/Home";
-import Especialidades from "./pages/Especialidades";
-import EspecialidadDetalle from "./pages/EspecialidadDetalle";
-import Directorio from "./pages/Directorio";
-import Servicios from "./pages/Servicios";
-import Nosotros from "./pages/Nosotros";
-import Galeria from "./pages/Galeria";
-import Login from "./pages/Login";
-import AdminDashboard from "./pages/AdminDashboard";
-import NotFound from "./pages/NotFound";
 import PrivateRoute from "./components/PrivateRoute";
-import { useAuth } from "./hooks/useAuth";
+import LoadingSpinner from "./components/LoadingSpinner";
+
+const Especialidades = lazy(() => import("./pages/Especialidades"));
+const EspecialidadDetalle = lazy(() => import("./pages/EspecialidadDetalle"));
+const Directorio = lazy(() => import("./pages/Directorio"));
+const Servicios = lazy(() => import("./pages/Servicios"));
+const Nosotros = lazy(() => import("./pages/Nosotros"));
+const Galeria = lazy(() => import("./pages/Galeria"));
+const Login = lazy(() => import("./pages/Login"));
+const AdminDashboard = lazy(() => import("./pages/AdminDashboard"));
+const NotFound = lazy(() => import("./pages/NotFound"));
 
 function App() {
-  const { user } = useAuth();
-
   return (
     <BrowserRouter>
-      <Routes>
-        <Route element={<LayoutPublico />}>
-          <Route path="/" element={<Home />} />
-          <Route path="/directorio" element={<Especialidades />} />
-          <Route path="/directorio/:id" element={<EspecialidadDetalle />} />
-          <Route path="/integrales" element={<Directorio />} />
-          <Route path="/servicios" element={<Servicios />} />
-          <Route path="/nosotros" element={<Nosotros />} />
-          <Route path="/galeria" element={<Galeria />} />
-        </Route>
+      <Suspense
+        fallback={
+          <main className="route-loading">
+            <LoadingSpinner message="Cargando..." />
+          </main>
+        }
+      >
+        <Routes>
+          <Route element={<LayoutPublico />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/directorio" element={<Especialidades />} />
+            <Route path="/directorio/:id" element={<EspecialidadDetalle />} />
+            <Route path="/integrales" element={<Directorio />} />
+            <Route path="/servicios" element={<Servicios />} />
+            <Route path="/nosotros" element={<Nosotros />} />
+            <Route path="/galeria" element={<Galeria />} />
+          </Route>
 
-        <Route path="/login" element={user ? <Navigate to="/admin" replace /> : <Login />} />
+          <Route path="/login" element={<Login />} />
 
-        <Route element={<PrivateRoute />}>
-          <Route path="/admin" element={<AdminDashboard />} />
-        </Route>
+          <Route element={<PrivateRoute />}>
+            <Route path="/admin" element={<AdminDashboard />} />
+          </Route>
 
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </Suspense>
     </BrowserRouter>
   );
 }

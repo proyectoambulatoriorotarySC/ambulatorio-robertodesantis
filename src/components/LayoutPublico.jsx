@@ -1,9 +1,10 @@
 import { Outlet, useLocation } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react";
 import AvisoBanner from "./AvisoBanner";
 import Header from "./Header";
 import Footer from "./Footer";
 import ScrollToTop from "./ScrollToTop";
+import LoadingSpinner from "./LoadingSpinner";
 
 const LayoutPublico = () => {
   const { pathname } = useLocation();
@@ -17,7 +18,9 @@ const LayoutPublico = () => {
       <AvisoBanner />
       <Header />
       <main className="page-content" key={pathname}>
-        <Outlet />
+        <Suspense fallback={<LoadingSpinner message="Cargando contenido..." />}>
+          <Outlet />
+        </Suspense>
       </main>
       <Footer />
       <ScrollToTop />
