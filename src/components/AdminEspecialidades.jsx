@@ -39,7 +39,7 @@ const iconOptions = [
   { value: "UserRound", label: "Usuario/Personal", Icon: LucideIcons.UserRound },
   { value: "Users", label: "Usuarios/Familia", Icon: LucideIcons.Users },
   { value: "HandHelping", label: "Ayuda/Apoyo", Icon: LucideIcons.HandHelping },
-].filter(opt => !!opt.Icon);
+].filter((opt) => !!opt.Icon);
 
 const days = ["lunes", "martes", "miercoles", "jueves", "viernes"];
 const turnos = ["mañana", "tarde"];
@@ -91,62 +91,43 @@ const buildScheduleFromData = (data) => {
   }, {});
 };
 
-const AdminEspecialidades = () => {
-  const { especialidades, createEspecialidad, updateEspecialidad, deleteEspecialidad } = useEspecialidades();
-  const [selectedId, setSelectedId] = useState("");
-  const [isCreatingNew, setIsCreatingNew] = useState(false);
-  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
-  const [formState, setFormState] = useState({
-    id: "",
-    nombre: "",
-    icon: "",
-    medicos: [],
-    textoHorarioPlano: "",
-    estudioIncluido: "",
-    cronograma: emptySchedule(),
+const AdminEspecialidadForm = ({
+  initialData,
+  isCreatingNew,
+  existingEspecialidades,
+  onSave,
+  onDelete,
+}) => {
+  const [formState, setFormState] = useState(() => {
+    if (!initialData || isCreatingNew) {
+      return {
+        id: "",
+        nombre: "",
+        icon: "",
+        medicos: [],
+        textoHorarioPlano: "",
+        estudioIncluido: "",
+        cronograma: emptySchedule(),
+      };
+    }
+    return {
+      id: initialData.id || "",
+      nombre: initialData.nombre || "",
+      icon: initialData.icon || "",
+      medicos: initialData.medicos || [],
+      textoHorarioPlano: initialData.textoHorarioPlano || "",
+      estudioIncluido: initialData.estudioIncluido || "",
+      cronograma: buildScheduleFromData(initialData),
+    };
   });
   const [newDoctor, setNewDoctor] = useState({ title: "Dr.", firstName: "", lastName: "" });
+  const [isIconPickerOpen, setIsIconPickerOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [status, setStatus] = useState({ type: "", message: "" });
+  const [status, setStatus] = useState({
+    type: "",
+    message: isCreatingNew ? "Creando especialidad nueva. Por favor, rellena los campos." : "",
+  });
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-
-  const [prevEspecialidades, setPrevEspecialidades] = useState(null);
-  const [prevSelectedId, setPrevSelectedId] = useState(null);
-  const [prevIsCreatingNew, setPrevIsCreatingNew] = useState(null);
-
-  if (
-    especialidades !== prevEspecialidades ||
-    selectedId !== prevSelectedId ||
-    isCreatingNew !== prevIsCreatingNew
-  ) {
-    setPrevEspecialidades(especialidades);
-    setPrevSelectedId(selectedId);
-    setPrevIsCreatingNew(isCreatingNew);
-
-    if (especialidades.length && !isCreatingNew) {
-      const item = especialidades.find((entry) => entry.id === selectedId) || especialidades[0];
-      if (item) {
-        if (selectedId !== item.id) {
-          setSelectedId(item.id);
-        }
-        setFormState({
-          id: item.id || "",
-          nombre: item.nombre || "",
-          icon: item.icon || "",
-          medicos: item.medicos || [],
-          textoHorarioPlano: item.textoHorarioPlano || "",
-          estudioIncluido: item.estudioIncluido || "",
-          cronograma: buildScheduleFromData(item),
-        });
-      }
-    }
-  }
-
-  const handleSelect = (id) => {
-    setIsCreatingNew(false);
-    setSelectedId(id);
-    setStatus({ type: "", message: "" });
-  };
 
   const handleFieldChange = (event) => {
     const { name, value } = event.target;
@@ -182,7 +163,7 @@ const AdminEspecialidades = () => {
       setStatus({ type: "error", message: "Nombre y apellido son obligatorios." });
       return;
     }
-    if (formState.medicos.some(m => m.toLowerCase() === fullName.toLowerCase())) {
+    if (formState.medicos.some((m) => m.toLowerCase() === fullName.toLowerCase())) {
       setStatus({ type: "error", message: "Este médico ya está en la lista." });
       return;
     }
@@ -206,21 +187,6 @@ const AdminEspecialidades = () => {
       ...current,
       medicos: current.medicos.filter((_, currentIndex) => currentIndex !== index),
     }));
-  };
-
-  const resetForm = () => {
-    setIsCreatingNew(true);
-    setSelectedId("");
-    setFormState({
-      id: "",
-      nombre: "",
-      icon: "",
-      medicos: [],
-      textoHorarioPlano: "",
-      estudioIncluido: "",
-      cronograma: emptySchedule(),
-    });
-    setStatus({ type: "", message: "Creando especialidad nueva. Por favor, rellena los campos." });
   };
 
   const isFormValid = useMemo(() => {
@@ -254,46 +220,36 @@ const AdminEspecialidades = () => {
     setStatus({ type: "", message: "" });
     try {
       if (isCreatingNew) {
-        const duplicate = especialidades.find(esp => esp.id === id);
+        const duplicate = existingEspecialidades.find((esp) => esp.id === id);
         if (duplicate) {
           throw new Error("Ya existe una especialidad con ese ID.");
         }
       }
-      const existing = especialidades.find((item) => item.id === id);
-      if (existing && !isCreatingNew) {
-        await updateEspecialidad(id, payload);
-        setStatus({ type: "success", message: "Especialidad actualizada correctamente." });
-      } else {
-        await createEspecialidad(id, payload);
-        setIsCreatingNew(false);
-        setSelectedId(id);
-        setStatus({ type: "success", message: "Especialidad creada correctamente." });
-      }
+      await onSave(id, payload, isCreatingNew);
+      setStatus({
+        type: "success",
+        message: isCreatingNew
+          ? "Especialidad creada correctamente."
+          : "Especialidad actualizada correctamente.",
+      });
     } catch (error) {
       console.error(error);
-      setStatus({ 
-        type: "error", 
-        message: error.message === "Ya existe una especialidad con ese ID." 
-          ? error.message 
-          : "No fue posible guardar la especialidad." 
+      setStatus({
+        type: "error",
+        message:
+          error.message === "Ya existe una especialidad con ese ID."
+            ? error.message
+            : "No fue posible guardar la especialidad.",
       });
     } finally {
       setSaving(false);
     }
   };
 
-  const deleteCurrent = () => {
-    if (!selectedId) return;
-    setIsDeleteModalOpen(true);
-  };
-
   const confirmDelete = async () => {
     setIsDeleteModalOpen(false);
     try {
-      await deleteEspecialidad(selectedId);
-      setStatus({ type: "success", message: "Especialidad eliminada." });
-      setIsCreatingNew(false);
-      resetForm();
+      await onDelete(initialData.id);
     } catch (error) {
       console.error(error);
       setStatus({ type: "error", message: "No fue posible eliminar la especialidad." });
@@ -301,144 +257,128 @@ const AdminEspecialidades = () => {
   };
 
   return (
-    <section className="admin-panel-card">
-      <div className="admin-panel-card__header">
-        <div>
-          <span className="section-kicker section-kicker--neutral">CRUD Especialidades</span>
-          <h2>Crear, editar y eliminar</h2>
+    <>
+      <form className="admin-form admin-form--grid" onSubmit={submitForm}>
+        <label>
+          Nombre de la especialidad *
+          <input name="nombre" value={formState.nombre} onChange={handleFieldChange} placeholder="Ej: Cardiología" required />
+        </label>
+        <label>
+          ID de documento (Autogenerado)
+          <input name="id" value={formState.id} onChange={handleFieldChange} placeholder="cardiologia-general" disabled={!isCreatingNew} />
+        </label>
+        <div className="admin-icon-picker">
+          <label>Icono representativo *</label>
+          <div className={`admin-custom-select ${isIconPickerOpen ? "admin-custom-select--open" : ""}`}>
+            <button type="button" className="admin-custom-select__trigger" onClick={() => setIsIconPickerOpen(!isIconPickerOpen)}>
+              {formState.icon ? (
+                <>
+                  {(() => {
+                    const opt = iconOptions.find((o) => o.value === formState.icon);
+                    const Icon = opt?.Icon || LucideIcons.Stethoscope;
+                    return <Icon size={20} />;
+                  })()}
+                  <span>{iconOptions.find((o) => o.value === formState.icon)?.label || "Seleccionar..."}</span>
+                </>
+              ) : (
+                <span>Seleccionar icono...</span>
+              )}
+              <LucideIcons.ChevronDown size={18} className="admin-custom-select__arrow" />
+            </button>
+            {isIconPickerOpen && (
+              <div className="admin-custom-select__options">
+                {iconOptions.map((opt) => {
+                  const Icon = opt.Icon;
+                  return (
+                    <button
+                      key={opt.value}
+                      type="button"
+                      className={`admin-custom-select__option ${formState.icon === opt.value ? "active" : ""}`}
+                      onClick={() => {
+                        setFormState((curr) => ({ ...curr, icon: opt.value }));
+                        setIsIconPickerOpen(false);
+                      }}
+                    >
+                      <Icon size={18} />
+                      <span>{opt.label}</span>
+                    </button>
+                  );
+                })}
+              </div>
+            )}
+          </div>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem' }}>
-          <button type="button" className="button button--secondary" onClick={resetForm}>
-            Nueva especialidad
+        <div className="admin-doctors">
+          <label>Médicos (Completa los campos y pulsa Enter o Agregar)</label>
+          <div className="admin-doctor-form">
+            <select value={newDoctor.title} onChange={(e) => setNewDoctor((curr) => ({ ...curr, title: e.target.value }))}>
+              <option value="Dr.">Dr.</option>
+              <option value="Dra.">Dra.</option>
+              <option value="Téc.">Téc.</option>
+              <option value="Lic.">Lic.</option>
+              <option value="Ing.">Ing.</option>
+            </select>
+            <input value={newDoctor.firstName} onChange={(e) => setNewDoctor((curr) => ({ ...curr, firstName: e.target.value }))} onKeyDown={handleDoctorKeyDown} placeholder="Nombre" />
+            <input value={newDoctor.lastName} onChange={(e) => setNewDoctor((curr) => ({ ...curr, lastName: e.target.value }))} onKeyDown={handleDoctorKeyDown} placeholder="Apellido" />
+            <button type="button" className="button button--secondary" onClick={addDoctor}>Agregar</button>
+          </div>
+          <div className="admin-chip-list">
+            {formState.medicos.map((medico, index) => (
+              <span key={`${medico}-${index}`} className="admin-chip">
+                {medico}
+                <button type="button" onClick={() => removeDoctor(index)}>×</button>
+              </span>
+            ))}
+            {formState.medicos.length === 0 && <span className="admin-form__hint">No hay médicos agregados.</span>}
+          </div>
+        </div>
+        <label>
+          Horario plano
+          <textarea name="textoHorarioPlano" rows="3" value={formState.textoHorarioPlano} onChange={handleFieldChange} placeholder="Lunes a viernes por la mañana..." />
+        </label>
+        <label>
+          Estudio o Servicio Adicional (Ej: Incluye Electrocardiograma)
+          <textarea name="estudioIncluido" rows="2" value={formState.estudioIncluido} onChange={handleFieldChange} placeholder="Ej: Eco pélvico / Electrocardiograma" />
+        </label>
+        <div className="admin-schedule-editor">
+          <strong>Horarios por día</strong>
+          <div className="admin-schedule-grid">
+            {days.map((day) => (
+              <article key={day} className="admin-schedule-day">
+                <span>{day}</span>
+                <div>
+                  {turnos.map((turno) => (
+                    <label key={`${day}-${turno}`} className="admin-form__check admin-form__check--compact">
+                      <input
+                        type="checkbox"
+                        checked={Boolean(formState.cronograma[day]?.[turno])}
+                        onChange={() => handleScheduleToggle(day, turno)}
+                      />
+                      {turno}
+                    </label>
+                  ))}
+                </div>
+              </article>
+            ))}
+          </div>
+        </div>
+        <div className="admin-form__actions">
+          <button type="submit" className="button button--primary" disabled={saving || !isFormValid}>
+            {saving ? "Guardando..." : !isCreatingNew && initialData?.id ? "Guardar cambios" : "Crear especialidad"}
+          </button>
+          <button
+            type="button"
+            className="button button--secondary"
+            onClick={() => setIsDeleteModalOpen(true)}
+            disabled={isCreatingNew || !initialData?.id}
+          >
+            Eliminar
           </button>
         </div>
-      </div>
-
-      <div className="admin-split admin-split--wide">
-        <aside className="admin-list admin-list--scroll">
-          {especialidades.length > 0 ? (
-            especialidades.map((item) => (
-              <button
-                key={item.id}
-                type="button"
-                className={selectedId === item.id ? "admin-list__item admin-list__item--active" : "admin-list__item"}
-                onClick={() => handleSelect(item.id)}
-              >
-                <strong>{item.nombre}</strong>
-                <span>{(item.medicos || []).join(" · ") || "Sin médicos"}</span>
-              </button>
-            ))
-          ) : (
-            <div style={{ padding: '1rem', textAlign: 'center', color: '#666' }}>
-              <p>Base de datos vacía.</p>
-            </div>
-          )}
-        </aside>
-
-        <form className="admin-form admin-form--grid" onSubmit={submitForm}>
-          <label>
-            Nombre de la especialidad *
-            <input name="nombre" value={formState.nombre} onChange={handleFieldChange} placeholder="Ej: Cardiología" required />
-          </label>
-          <label>
-            ID de documento (Autogenerado)
-            <input name="id" value={formState.id} onChange={handleFieldChange} placeholder="cardiologia-general" disabled={!isCreatingNew} />
-          </label>
-          <div className="admin-icon-picker">
-            <label>Icono representativo *</label>
-            <div className={`admin-custom-select ${isIconPickerOpen ? "admin-custom-select--open" : ""}`}>
-              <button type="button" className="admin-custom-select__trigger" onClick={() => setIsIconPickerOpen(!isIconPickerOpen)}>
-                {formState.icon ? (
-                  <>
-                    {(() => {
-                      const opt = iconOptions.find(o => o.value === formState.icon);
-                      const Icon = opt?.Icon || LucideIcons.Stethoscope;
-                      return <Icon size={20} />;
-                    })()}
-                    <span>{iconOptions.find(o => o.value === formState.icon)?.label || "Seleccionar..."}</span>
-                  </>
-                ) : (
-                  <span>Seleccionar icono...</span>
-                )}
-                <LucideIcons.ChevronDown size={18} className="admin-custom-select__arrow" />
-              </button>
-              {isIconPickerOpen && (
-                <div className="admin-custom-select__options">
-                  {iconOptions.map((opt) => {
-                    const Icon = opt.Icon;
-                    return (
-                      <button key={opt.value} type="button" className={`admin-custom-select__option ${formState.icon === opt.value ? "active" : ""}`}
-                        onClick={() => { setFormState(curr => ({ ...curr, icon: opt.value })); setIsIconPickerOpen(false); }}>
-                        <Icon size={18} />
-                        <span>{opt.label}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-              )}
-            </div>
-          </div>
-          <div className="admin-doctors">
-            <label>Médicos (Completa los campos y pulsa Enter o Agregar)</label>
-            <div className="admin-doctor-form">
-              <select value={newDoctor.title} onChange={(e) => setNewDoctor(curr => ({ ...curr, title: e.target.value }))}>
-                <option value="Dr.">Dr.</option>
-                <option value="Dra.">Dra.</option>
-                <option value="Téc.">Téc.</option>
-                <option value="Lic.">Lic.</option>
-                <option value="Ing.">Ing.</option>
-              </select>
-              <input value={newDoctor.firstName} onChange={(e) => setNewDoctor(curr => ({ ...curr, firstName: e.target.value }))} onKeyDown={handleDoctorKeyDown} placeholder="Nombre" />
-              <input value={newDoctor.lastName} onChange={(e) => setNewDoctor(curr => ({ ...curr, lastName: e.target.value }))} onKeyDown={handleDoctorKeyDown} placeholder="Apellido" />
-              <button type="button" className="button button--secondary" onClick={addDoctor}>Agregar</button>
-            </div>
-            <div className="admin-chip-list">
-              {formState.medicos.map((medico, index) => (
-                <span key={`${medico}-${index}`} className="admin-chip">
-                  {medico}
-                  <button type="button" onClick={() => removeDoctor(index)}>×</button>
-                </span>
-              ))}
-              {formState.medicos.length === 0 && <span className="admin-form__hint">No hay médicos agregados.</span>}
-            </div>
-          </div>
-          <label>
-            Horario plano
-            <textarea name="textoHorarioPlano" rows="3" value={formState.textoHorarioPlano} onChange={handleFieldChange} placeholder="Lunes a viernes por la mañana..." />
-          </label>
-          <label>
-            Estudio o Servicio Adicional (Ej: Incluye Electrocardiograma)
-            <textarea name="estudioIncluido" rows="2" value={formState.estudioIncluido} onChange={handleFieldChange} placeholder="Ej: Eco pélvico / Electrocardiograma" />
-          </label>
-          <div className="admin-schedule-editor">
-            <strong>Horarios por día</strong>
-            <div className="admin-schedule-grid">
-              {days.map((day) => (
-                <article key={day} className="admin-schedule-day">
-                  <span>{day}</span>
-                  <div>
-                    {turnos.map((turno) => (
-                      <label key={`${day}-${turno}`} className="admin-form__check admin-form__check--compact">
-                        <input type="checkbox" checked={Boolean(formState.cronograma[day]?.[turno])} onChange={() => handleScheduleToggle(day, turno)} />
-                        {turno}
-                      </label>
-                    ))}
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-          <div className="admin-form__actions">
-            <button type="submit" className="button button--primary" disabled={saving || !isFormValid}>
-              {saving ? "Guardando..." : selectedId && !isCreatingNew ? "Guardar cambios" : "Crear especialidad"}
-            </button>
-            <button type="button" className="button button--secondary" onClick={deleteCurrent} disabled={!selectedId || isCreatingNew}>Eliminar</button>
-          </div>
-          {status.message && (
-            <p className={`admin-form__status ${status.type === "success" ? "admin-form__status--success" : ""}`}>{status.message}</p>
-          )}
-        </form>
-      </div>
+        {status.message && (
+          <p className={`admin-form__status ${status.type === "success" ? "admin-form__status--success" : ""}`}>{status.message}</p>
+        )}
+      </form>
 
       {isDeleteModalOpen && (
         <div className="admin-modal-overlay" onClick={() => setIsDeleteModalOpen(false)}>
@@ -469,6 +409,96 @@ const AdminEspecialidades = () => {
           </div>
         </div>
       )}
+    </>
+  );
+};
+
+const AdminEspecialidades = () => {
+  const { especialidades, createEspecialidad, updateEspecialidad, deleteEspecialidad } = useEspecialidades();
+  const [selectedId, setSelectedId] = useState("");
+  const [isCreatingNew, setIsCreatingNew] = useState(false);
+
+  const activeItem = useMemo(() => {
+    if (isCreatingNew) return null;
+    return especialidades.find((entry) => entry.id === selectedId) || especialidades[0] || null;
+  }, [isCreatingNew, especialidades, selectedId]);
+
+  const effectiveId = isCreatingNew ? "new" : (activeItem?.id || "empty");
+
+  const handleSelect = (id) => {
+    setIsCreatingNew(false);
+    setSelectedId(id);
+  };
+
+  const resetForm = () => {
+    setIsCreatingNew(true);
+    setSelectedId("");
+  };
+
+  const handleSave = async (id, payload, isNew) => {
+    if (isNew) {
+      await createEspecialidad(id, payload);
+      setIsCreatingNew(false);
+      setSelectedId(id);
+    } else {
+      await updateEspecialidad(id, payload);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    await deleteEspecialidad(id);
+    const remaining = especialidades.filter((esp) => esp.id !== id);
+    if (remaining.length > 0) {
+      setSelectedId(remaining[0].id);
+    } else {
+      resetForm();
+    }
+  };
+
+  return (
+    <section className="admin-panel-card">
+      <div className="admin-panel-card__header">
+        <div>
+          <span className="section-kicker section-kicker--neutral">CRUD Especialidades</span>
+          <h2>Crear, editar y eliminar</h2>
+        </div>
+        <div style={{ display: "flex", gap: "0.5rem" }}>
+          <button type="button" className="button button--secondary" onClick={resetForm}>
+            Nueva especialidad
+          </button>
+        </div>
+      </div>
+
+      <div className="admin-split admin-split--wide">
+        <aside className="admin-list admin-list--scroll">
+          {especialidades.length > 0 ? (
+            especialidades.map((item) => (
+              <button
+                key={item.id}
+                type="button"
+                className={activeItem?.id === item.id && !isCreatingNew ? "admin-list__item admin-list__item--active" : "admin-list__item"}
+                onClick={() => handleSelect(item.id)}
+              >
+                <strong>{item.nombre}</strong>
+                <span>{(item.medicos || []).join(" · ") || "Sin médicos"}</span>
+              </button>
+            ))
+          ) : (
+            <div style={{ padding: "1rem", textAlign: "center", color: "#666" }}>
+              <p>Base de datos vacía.</p>
+            </div>
+          )}
+        </aside>
+
+        <AdminEspecialidadForm
+          key={effectiveId}
+          initialData={activeItem}
+          isCreatingNew={isCreatingNew}
+          existingEspecialidades={especialidades}
+          onSave={handleSave}
+          onDelete={handleDelete}
+        />
+      </div>
     </section>
   );
 };

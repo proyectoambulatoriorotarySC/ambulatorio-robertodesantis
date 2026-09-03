@@ -7,68 +7,77 @@ const emptyPackage = {
   detail: "",
 };
 
-const AdminConsultas = () => {
-  const { configuracion, updateConfiguracion } = useConfiguracion();
-  const [items, setItems] = useState(consultationPackages);
-  const [editingIndex, setEditingIndex] = useState(0);
-  const [formState, setFormState] = useState(emptyPackage);
-  const [saving, setSaving] = useState(false);
-  const [message, setMessage] = useState("");
-
-  const sourceItems = useMemo(() => configuracion?.consultasIntegrales || consultationPackages, [configuracion]);
-
-  const [prevSourceItems, setPrevSourceItems] = useState(null);
-  const [prevItems, setPrevItems] = useState(null);
-  const [prevEditingIndex, setPrevEditingIndex] = useState(null);
-
-  let currentItems = items;
-
-  if (sourceItems !== prevSourceItems) {
-    setPrevSourceItems(sourceItems);
-    setItems(sourceItems);
-    currentItems = sourceItems;
-  }
-
-  if (currentItems !== prevItems || editingIndex !== prevEditingIndex) {
-    setPrevItems(currentItems);
-    setPrevEditingIndex(editingIndex);
-
-    if (!currentItems.length) {
-      if (editingIndex !== 0) {
-        setEditingIndex(0);
-      }
-      setFormState(emptyPackage);
-    } else {
-      const targetIndex = Math.min(editingIndex, currentItems.length - 1);
-      if (editingIndex !== targetIndex) {
-        setEditingIndex(targetIndex);
-      }
-      const current = currentItems[targetIndex];
-      setFormState(current || emptyPackage);
-    }
-  }
+const AdminConsultaForm = ({ initialData, onSave, onDelete, isSaving, canDelete }) => {
+  const [formState, setFormState] = useState(initialData);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
     setFormState((current) => ({ ...current, [name]: value }));
   };
 
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    onSave(formState);
+  };
+
+  return (
+    <form className="admin-form" onSubmit={handleSubmit}>
+      <label>
+        Título del paquete
+        <input name="title" value={formState.title} onChange={handleChange} required />
+      </label>
+
+      <label>
+        Descripción
+        <textarea name="detail" rows="6" value={formState.detail} onChange={handleChange} />
+      </label>
+
+      <div className="admin-form__actions">
+        <button type="submit" className="button button--primary" disabled={isSaving}>
+          {isSaving ? "Guardando..." : "Guardar paquete"}
+        </button>
+        <button
+          type="button"
+          className="button button--secondary"
+          onClick={onDelete}
+          disabled={!canDelete || isSaving}
+        >
+          Eliminar
+        </button>
+      </div>
+    </form>
+  );
+};
+
+const AdminConsultas = () => {
+  const { configuracion, updateConfiguracion } = useConfiguracion();
+  const [editingIndex, setEditingIndex] = useState(0);
+  const [saving, setSaving] = useState(false);
+  const [message, setMessage] = useState("");
+
+  const items = useMemo(
+    () => configuracion?.consultasIntegrales || consultationPackages,
+    [configuracion]
+  );
+
+  const safeIndex = Math.min(editingIndex, Math.max(0, items.length - 1));
+  const currentItem = items[safeIndex] || emptyPackage;
+
   const handleSelect = (index) => {
     setEditingIndex(index);
     setMessage("");
   };
 
-  const handleSave = async (event) => {
-    event.preventDefault();
-    if (!formState.title.trim()) {
+  const handleSave = async (updatedPackage) => {
+    if (!updatedPackage.title.trim()) {
       setMessage("El título del paquete es obligatorio.");
       return;
     }
 
     const nextItems = [...items];
-    nextItems[editingIndex] = {
-      title: formState.title.trim(),
-      detail: formState.detail.trim(),
+    nextItems[safeIndex] = {
+      title: updatedPackage.title.trim(),
+      detail: updatedPackage.detail.trim(),
     };
 
     setSaving(true);
@@ -76,7 +85,6 @@ const AdminConsultas = () => {
 
     try {
       await updateConfiguracion({ consultasIntegrales: nextItems });
-      setItems(nextItems);
       setMessage("Paquete actualizado correctamente.");
     } catch (error) {
       console.error(error);
@@ -93,7 +101,6 @@ const AdminConsultas = () => {
 
     try {
       await updateConfiguracion({ consultasIntegrales: nextItems });
-      setItems(nextItems);
       setEditingIndex(nextItems.length - 1);
       setMessage("Nuevo paquete listo para editar.");
     } catch (error) {
@@ -104,15 +111,14 @@ const AdminConsultas = () => {
     }
   };
 
-  const handleDelete = async (index) => {
-    const nextItems = items.filter((_, currentIndex) => currentIndex !== index);
+  const handleDelete = async () => {
+    const nextItems = items.filter((_, index) => index !== safeIndex);
     setSaving(true);
     setMessage("");
 
     try {
       await updateConfiguracion({ consultasIntegrales: nextItems });
-      setItems(nextItems);
-      setEditingIndex(0);
+      setEditingIndex(Math.max(0, safeIndex - 1));
       setMessage("Paquete eliminado.");
     } catch (error) {
       console.error(error);
@@ -129,7 +135,7 @@ const AdminConsultas = () => {
           <span className="section-kicker section-kicker--gold">Gestión de Consultas Integrales</span>
           <h2>Paquetes editables</h2>
         </div>
-        <button type="button" className="button button--secondary" onClick={handleAdd}>
+        <button type="button" className="button button--secondary" onClick={handleAdd} disabled={saving}>
           Agregar paquete
         </button>
       </div>
@@ -140,7 +146,7 @@ const AdminConsultas = () => {
             <button
               key={`${item.title}-${index}`}
               type="button"
-              className={editingIndex === index ? "admin-list__item admin-list__item--active" : "admin-list__item"}
+              className={safeIndex === index ? "admin-list__item admin-list__item--active" : "admin-list__item"}
               onClick={() => handleSelect(index)}
             >
               <strong>{item.title || "Nuevo paquete"}</strong>
@@ -149,33 +155,17 @@ const AdminConsultas = () => {
           ))}
         </aside>
 
-        <form className="admin-form" onSubmit={handleSave}>
-          <label>
-            Título del paquete
-            <input name="title" value={formState.title} onChange={handleChange} />
-          </label>
-
-          <label>
-            Descripción
-            <textarea name="detail" rows="6" value={formState.detail} onChange={handleChange} />
-          </label>
-
-          <div className="admin-form__actions">
-            <button type="submit" className="button button--primary" disabled={saving}>
-              {saving ? "Guardando..." : "Guardar paquete"}
-            </button>
-            <button
-              type="button"
-              className="button button--secondary"
-              onClick={() => handleDelete(editingIndex)}
-              disabled={!items.length}
-            >
-              Eliminar
-            </button>
-          </div>
-
-          {message ? <p className="admin-form__status">{message}</p> : null}
-        </form>
+        <div style={{ flex: 1 }}>
+          <AdminConsultaForm
+            key={`${safeIndex}-${currentItem.title}`}
+            initialData={currentItem}
+            onSave={handleSave}
+            onDelete={handleDelete}
+            isSaving={saving}
+            canDelete={items.length > 0}
+          />
+          {message ? <p className="admin-form__status" style={{ marginTop: "1rem" }}>{message}</p> : null}
+        </div>
       </div>
     </section>
   );
