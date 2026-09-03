@@ -44,8 +44,9 @@ const MapaUbicacion = ({ configuracion }) => {
         <iframe
           title="Ubicación del Ambulatorio Roberto De Santis"
           loading="lazy"
+          allowFullScreen
           referrerPolicy="no-referrer-when-downgrade"
-          src="https://www.google.com/maps?q=Centro%20M%C3%A9dico%20Rotary%20Club%20Venezuela&output=embed"
+          src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d1647.7154441271841!2d-62.77106281691475!3d8.268140540993834!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x8dcbf92c5ec7a69b%3A0x801f915ceb4f6eef!2sCentro%20M%C3%A9dico%20Rotary%20Club!5e1!3m2!1ses!2sve!4v1788472971254!5m2!1ses!2sve"
         />
       </div>
     </section>
